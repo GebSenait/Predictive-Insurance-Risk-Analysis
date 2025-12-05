@@ -15,3 +15,7 @@ loguru>=0.7.0
 # Data validation (if needed)
 pydantic>=2.0.0,<3.0.0
 
+# Data Version Control
+dvc>=3.0.0,<4.0.0
+dvc[s3]>=3.0.0,<4.0.0
+

@@ -89,3 +89,16 @@ secrets/
 docs/_build/
 docs/build/
 
+# DVC
+.dvc/cache/
+.dvc/tmp/
+.dvc/state
+.dvc/lock
+*.dvc
+!*.dvc
+!.dvc/config
+!.dvc/.gitignore
+.dvc/*
+
+# DVC remote storage (local)
+dvc-storage/
