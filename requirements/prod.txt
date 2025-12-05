@@ -1,0 +1,6 @@
+# Production dependencies
+-r base.txt
+
+# Production-specific packages
+# Add any production-only dependencies here
+

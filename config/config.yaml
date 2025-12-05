@@ -1,0 +1,27 @@
+# Configuration file for Predictive Insurance Risk Analysis
+
+# Data paths
+data:
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  external_path: "data/external"
+
+# Logging configuration
+logging:
+  level: "INFO"
+  log_file: "logs/application.log"
+  rotation: "10 MB"
+  retention: "7 days"
+
+# Analysis configuration
+analysis:
+  task1:
+    enabled: true
+    # Add Task 1 specific configuration here
+
+# Output paths
+output:
+  results_path: "results"
+  figures_path: "results/figures"
+  reports_path: "results/reports"
+
