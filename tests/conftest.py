@@ -40,3 +40,13 @@ logging:
     config_path.write_text(config_content)
     yield config_path
 
+
+@pytest.fixture
+def sample_csv_file(temp_dir):
+    """Create a sample CSV file for testing."""
+    import pandas as pd
+    csv_path = temp_dir / "test_data.csv"
+    df = pd.DataFrame({"col1": [1, 2, 3], "col2": ["a", "b", "c"]})
+    df.to_csv(csv_path, index=False)
+    yield csv_path
+
