@@ -25,3 +25,14 @@ output:
   figures_path: "results/figures"
   reports_path: "results/reports"
 
+# DVC configuration
+dvc:
+  remote_storage: "dvc-storage"
+  remote_name: "local-storage"
+  cache_dir: ".dvc/cache"
+  # Data versioning settings
+  data_versioning:
+    enabled: true
+    auto_commit: false  # Set to true for automatic commits (not recommended for production)
+    check_ignore: true
+
