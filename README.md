@@ -1,8 +1,12 @@
-# Predictive Insurance Risk Analysis - Task 1
+# Predictive Insurance Risk Analysis
 
 ## Project Overview
 
-This repository contains the implementation for Task 1 of the Predictive Insurance Risk Analysis project. The project focuses on building a robust, production-ready data analysis pipeline following industry best practices.
+This repository contains the implementation for the Predictive Insurance Risk Analysis project. The project focuses on building a robust, production-ready data analysis pipeline following industry best practices with full reproducibility and auditability for financial/insurance regulatory compliance.
+
+**Current Status:**
+- ✅ **Task 1**: Repository infrastructure and code quality setup (Complete)
+- ✅ **Task 2**: Reproducible & Auditable Data Pipeline with DVC (Complete)
 
 ## Repository Structure
 
@@ -27,7 +31,8 @@ predictive-insurance-risk-analysis/
 │   ├── architecture/
 │   ├── api/
 │   ├── guides/
-│   └── task1/
+│   ├── task1/
+│   └── task2/
 ├── src/
 │   ├── data/
 │   │   ├── __init__.py
@@ -92,11 +97,89 @@ pip install -r requirements/dev.txt
 pre-commit install
 ```
 
+5. Set up DVC (Data Version Control):
+```bash
+# On Windows (PowerShell)
+.\scripts\setup_dvc.ps1
+
+# On Unix/Linux/Mac
+chmod +x scripts/setup_dvc.sh
+./scripts/setup_dvc.sh
+```
+
+6. Pull data from DVC remote:
+```bash
+dvc pull
+```
+
 ### Running the Analysis
 
 ```bash
 python scripts/run_analysis.py
 ```
+
+## Data Version Control (DVC)
+
+This project uses **DVC (Data Version Control)** to ensure full reproducibility and auditability of data pipelines, meeting financial/insurance regulatory requirements.
+
+### Quick Start with DVC
+
+1. **Pull tracked data:**
+   ```bash
+   dvc pull
+   ```
+
+2. **Check data status:**
+   ```bash
+   dvc status
+   ```
+
+3. **View tracked files:**
+   ```bash
+   dvc list data/raw
+   ```
+
+### Reproducing the Pipeline
+
+To reproduce any analysis at a specific point in time:
+
+1. **Checkout the desired Git commit:**
+   ```bash
+   git checkout <commit-hash>
+   ```
+
+2. **Pull the corresponding data version:**
+   ```bash
+   dvc pull
+   ```
+
+3. **Run the analysis:**
+   ```bash
+   python scripts/run_analysis.py
+   ```
+
+### DVC Remote Storage
+
+- **Location**: `dvc-storage/` (local directory)
+- **Remote Name**: `local-storage`
+- **Configuration**: `.dvc/config`
+
+The remote storage is configured to use a local directory for versioned data. All data files are tracked via `.dvc` metadata files committed to Git, while actual data is stored in the remote storage.
+
+### Historical Data Versions
+
+To access historical versions of data:
+
+```bash
+# List all versions
+git log --oneline data/raw/MachineLearningRating_v3.txt.dvc
+
+# Checkout a specific version
+git checkout <commit-hash> data/raw/MachineLearningRating_v3.txt.dvc
+dvc checkout data/raw/MachineLearningRating_v3.txt.dvc
+```
+
+For detailed DVC documentation, see [docs/task2/README.md](docs/task2/README.md).
 
 ## Development Workflow
 
