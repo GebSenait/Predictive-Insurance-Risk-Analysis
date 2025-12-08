@@ -7,6 +7,7 @@ This repository contains the implementation for the Predictive Insurance Risk An
 **Current Status:**
 - ✅ **Task 1**: Repository infrastructure and code quality setup (Complete)
 - ✅ **Task 2**: Reproducible & Auditable Data Pipeline with DVC (Complete)
+- ✅ **Task 3**: Statistical Validation of Risk Drivers through A/B Hypothesis Testing (Complete)
 
 ## Repository Structure
 
@@ -32,7 +33,8 @@ predictive-insurance-risk-analysis/
 │   ├── api/
 │   ├── guides/
 │   ├── task1/
-│   └── task2/
+│   ├── task2/
+│   └── task3/
 ├── src/
 │   ├── data/
 │   │   ├── __init__.py
@@ -40,7 +42,8 @@ predictive-insurance-risk-analysis/
 │   │   └── validators.py
 │   ├── analysis/
 │   │   ├── __init__.py
-│   │   └── task1/
+│   │   ├── task1/
+│   │   └── task3/
 │   ├── utils/
 │   │   ├── __init__.py
 │   │   ├── logger.py
@@ -115,6 +118,10 @@ dvc pull
 ### Running the Analysis
 
 ```bash
+# Run Task 3: Statistical Hypothesis Testing
+python scripts/run_task3.py
+
+# Run other analyses
 python scripts/run_analysis.py
 ```
 
@@ -180,6 +187,33 @@ dvc checkout data/raw/MachineLearningRating_v3.txt.dvc
 ```
 
 For detailed DVC documentation, see [docs/task2/README.md](docs/task2/README.md).
+
+## Task 3: Statistical Validation of Risk Drivers
+
+Task 3 implements statistical hypothesis testing to validate key assumptions about insurance risk drivers. The analysis tests four null hypotheses related to geographic, demographic, and profitability dimensions.
+
+### Quick Start
+
+```bash
+# Run Task 3 analysis
+python scripts/run_task3.py
+```
+
+### Key Features
+
+- **Four Hypothesis Tests**: Province, zip code, and gender-based risk comparisons
+- **Multiple Metrics**: Claim Frequency, Claim Severity, and Margin analysis
+- **Statistical Rigor**: Appropriate tests (t-test, chi-square, Mann-Whitney U) with normality checks
+- **Business Interpretations**: Actionable insights for pricing and segmentation strategies
+
+### Output
+
+After running, results are saved to:
+- `results/task3_results.json`: Complete test results
+- `results/reports/task3_statistical_report.md`: Comprehensive markdown report
+- `results/figures/hypothesis_test_summary.png`: Visualization summary
+
+For detailed documentation, see [docs/task3/README.md](docs/task3/README.md).
 
 ## Development Workflow
 
