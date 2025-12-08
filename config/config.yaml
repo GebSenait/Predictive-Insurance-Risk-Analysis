@@ -18,6 +18,12 @@ analysis:
   task1:
     enabled: true
     # Add Task 1 specific configuration here
+  task3:
+    enabled: true
+    alpha: 0.05  # Significance level for hypothesis tests
+    min_samples_province: 1000
+    min_samples_zipcode: 500
+    min_samples_gender: 1000
 
 # Output paths
 output:
