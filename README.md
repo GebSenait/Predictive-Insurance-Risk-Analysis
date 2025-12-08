@@ -8,6 +8,7 @@ This repository contains the implementation for the Predictive Insurance Risk An
 - ✅ **Task 1**: Repository infrastructure and code quality setup (Complete)
 - ✅ **Task 2**: Reproducible & Auditable Data Pipeline with DVC (Complete)
 - ✅ **Task 3**: Statistical Validation of Risk Drivers through A/B Hypothesis Testing (Complete)
+- ✅ **Task 4**: Predictive Modeling for Risk-Based Pricing and Severity Estimation (Complete)
 
 ## Repository Structure
 
@@ -34,7 +35,8 @@ predictive-insurance-risk-analysis/
 │   ├── guides/
 │   ├── task1/
 │   ├── task2/
-│   └── task3/
+│   ├── task3/
+│   └── task4/
 ├── src/
 │   ├── data/
 │   │   ├── __init__.py
@@ -43,7 +45,8 @@ predictive-insurance-risk-analysis/
 │   ├── analysis/
 │   │   ├── __init__.py
 │   │   ├── task1/
-│   │   └── task3/
+│   │   ├── task3/
+│   │   └── task4/
 │   ├── utils/
 │   │   ├── __init__.py
 │   │   ├── logger.py
@@ -120,6 +123,9 @@ dvc pull
 ```bash
 # Run Task 3: Statistical Hypothesis Testing
 python scripts/run_task3.py
+
+# Run Task 4: Predictive Modeling
+python scripts/run_task4.py
 
 # Run other analyses
 python scripts/run_analysis.py
@@ -214,6 +220,58 @@ After running, results are saved to:
 - `results/figures/hypothesis_test_summary.png`: Visualization summary
 
 For detailed documentation, see [docs/task3/README.md](docs/task3/README.md).
+
+## Task 4: Predictive Modeling for Risk-Based Pricing
+
+Task 4 implements predictive models to support ACIS's dynamic, risk-based pricing system. The analysis includes claim severity prediction, premium optimization, and claim probability estimation.
+
+### Quick Start
+
+```bash
+# Run Task 4 analysis
+python scripts/run_task4.py
+```
+
+### Key Features
+
+- **Claim Severity Model**: Predicts claim amounts for policies where claims occurred (Regression)
+- **Premium Optimization Model**: Predicts appropriate premium levels (Regression)
+- **Claim Probability Model**: Estimates probability of claims occurring (Classification)
+- **Multiple Algorithms**: Linear Regression, Decision Trees, Random Forest, Gradient Boosting, XGBoost
+- **Model Interpretability**: SHAP and LIME analysis to identify key risk drivers
+- **Comprehensive Evaluation**: RMSE, R² for regression; Accuracy, Precision, Recall, F1 for classification
+
+### Models Implemented
+
+1. **Claim Severity Model** (Regression)
+   - Target: `TotalClaims` (for policies with claims)
+   - Metrics: RMSE, R²
+   - Algorithms: Linear Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost
+
+2. **Premium Optimization Model** (Regression)
+   - Target: `TotalPremium`
+   - Metrics: RMSE, R²
+   - Algorithms: Linear Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost
+
+3. **Claim Probability Model** (Classification)
+   - Target: Binary indicator (1 if claim, 0 if no claim)
+   - Metrics: Accuracy, Precision, Recall, F1
+   - Algorithms: Logistic Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost
+   - Supports risk-based premium formula: `Premium = P(Claim) × Predicted Severity + Expense Loading + Profit Margin`
+
+### Output
+
+After running, results are saved to:
+- `results/task4/task4_results.json`: Complete model results
+- `results/reports/task4_modeling_report.md`: Comprehensive markdown report
+- `results/reports/task4_model_comparison.csv`: Model comparison table
+- `results/task4/task4_top_features.json`: Top influential features from interpretability analysis
+
+### Model Interpretability
+
+The analysis includes SHAP and LIME interpretability to identify the top 5-10 most influential features for each model, with business interpretations for pricing strategy.
+
+For detailed documentation, see [docs/task4/README.md](docs/task4/README.md).
 
 ## Development Workflow
 

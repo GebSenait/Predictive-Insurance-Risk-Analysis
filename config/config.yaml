@@ -24,6 +24,14 @@ analysis:
     min_samples_province: 1000
     min_samples_zipcode: 500
     min_samples_gender: 1000
+  task4:
+    enabled: true
+    random_state: 42  # Random seed for reproducibility
+    test_size: 0.3  # Proportion of data for testing (30%)
+    # Model hyperparameters
+    n_estimators: 100  # For ensemble models
+    max_depth: 10  # For tree-based models
+    learning_rate: 0.1  # For boosting models
 
 # Output paths
 output:
