@@ -206,26 +206,63 @@ class DataPreprocessor:
                     df[col] = self.label_encoders[col].transform(df[col].astype(str))
 
             elif encoding_method == "onehot":
-                # One-hot encoding
-                if col not in self.onehot_encoders:
-                    self.onehot_encoders[col] = OneHotEncoder(
-                        sparse_output=False, handle_unknown="ignore"
-                    )
-                    encoded = self.onehot_encoders[col].fit_transform(
-                        df[[col]].astype(str)
-                    )
-                else:
-                    encoded = self.onehot_encoders[col].transform(
-                        df[[col]].astype(str)
+                # One-hot encoding with error handling
+                try:
+                    if col not in self.onehot_encoders:
+                        self.onehot_encoders[col] = OneHotEncoder(
+                            sparse_output=False, handle_unknown="ignore"
+                        )
+                        encoded = self.onehot_encoders[col].fit_transform(
+                            df[[col]].astype(str)
+                        )
+                    else:
+                        encoded = self.onehot_encoders[col].transform(
+                            df[[col]].astype(str)
+                        )
+
+                    # Create column names
+                    feature_names = [f"{col}_{cat}" for cat in self.onehot_encoders[col].categories_[0]]
+                    
+                    # Ensure encoded is a numpy array and convert to float if needed
+                    if not isinstance(encoded, np.ndarray):
+                        encoded = np.array(encoded)
+                    encoded = encoded.astype(float)
+                    
+                    # Create DataFrame with proper index alignment
+                    encoded_df = pd.DataFrame(
+                        encoded, 
+                        columns=feature_names, 
+                        index=df.index
                     )
 
-                # Create column names
-                feature_names = [f"{col}_{cat}" for cat in self.onehot_encoders[col].categories_[0]]
-                encoded_df = pd.DataFrame(encoded, columns=feature_names, index=df.index)
-
-                # Drop original column and add encoded columns
-                df = df.drop(columns=[col])
-                df = pd.concat([df, encoded_df], axis=1)
+                    # Drop original column first
+                    df = df.drop(columns=[col], errors="ignore")
+                    
+                    # Use assign method for safer concatenation (avoids numpy vstack issues)
+                    for feat_col in feature_names:
+                        df[feat_col] = encoded_df[feat_col]
+                    
+                except Exception as e:
+                    self.logger.warning(
+                        f"Error encoding column {col} with one-hot: {e}. "
+                        f"Using label encoding instead."
+                    )
+                    # Fallback to label encoding
+                    if col not in self.label_encoders:
+                        self.label_encoders[col] = LabelEncoder()
+                        df[col] = self.label_encoders[col].fit_transform(
+                            df[col].astype(str).fillna("Unknown")
+                        )
+                    else:
+                        unique_values = set(df[col].astype(str).fillna("Unknown").unique())
+                        known_values = set(self.label_encoders[col].classes_)
+                        for val in unique_values - known_values:
+                            self.label_encoders[col].classes_ = np.append(
+                                self.label_encoders[col].classes_, val
+                            )
+                        df[col] = self.label_encoders[col].transform(
+                            df[col].astype(str).fillna("Unknown")
+                        )
 
         self.logger.info("Categorical encoding complete")
         return df
