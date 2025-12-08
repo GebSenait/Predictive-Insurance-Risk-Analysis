@@ -26,6 +26,7 @@ class DataLoader:
     def load_csv(
         self,
         file_path: Union[str, Path],
+        sep: str = ",",
         **kwargs,
     ) -> pd.DataFrame:
         """
@@ -53,7 +54,7 @@ class DataLoader:
 
         try:
             self.logger.info(f"Loading CSV file: {file_path}")
-            df = pd.read_csv(file_path, **kwargs)
+            df = pd.read_csv(file_path, sep=sep, **kwargs)
             self.logger.info(f"Successfully loaded {len(df)} rows from {file_path}")
             return df
         except Exception as e:
