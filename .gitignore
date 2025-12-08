@@ -71,6 +71,15 @@ models/*.h5
 logs/
 *.log
 
+# Results (generated outputs)
+results/figures/*.png
+results/reports/*.md
+results/reports/*.csv
+results/*.json
+!results/.gitkeep
+!results/figures/.gitkeep
+!results/reports/.gitkeep
+
 # OS
 .DS_Store
 Thumbs.db
