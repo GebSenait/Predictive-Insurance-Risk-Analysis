@@ -1,72 +1,68 @@
 # Predictive Insurance Risk Analysis
 
-## Project Overview
+[![CI](https://github.com/GebSenait/Predictive-Insurance-Risk-Analysis/actions/workflows/ci.yml/badge.svg?branch=task-dev)](https://github.com/GebSenait/Predictive-Insurance-Risk-Analysis/actions/workflows/ci.yml)
 
-This repository contains the implementation for the Predictive Insurance Risk Analysis project. The project focuses on building a robust, production-ready data analysis pipeline following industry best practices with full reproducibility and auditability for financial/insurance regulatory compliance.
+## Business Problem
 
-**Current Status:**
-- ✅ **Task 1**: Repository infrastructure and code quality setup (Complete)
-- ✅ **Task 2**: Reproducible & Auditable Data Pipeline with DVC (Complete)
-- ✅ **Task 3**: Statistical Validation of Risk Drivers through A/B Hypothesis Testing (Complete)
-- ✅ **Task 4**: Predictive Modeling for Risk-Based Pricing and Severity Estimation (Complete)
+Insurance pricing decisions rely on predictive models, but stakeholders struggle to interpret and trust technical outputs. Mis-priced policies lead to adverse selection, under-reserving, and regulatory risk. There is a need for a **transparent, justifiable, automated decision system** that connects model outputs directly to pricing actions.
+
+## Solution
+
+This project delivers a **production-ready ML pipeline** that:
+
+1. **Trains** multiple regression and classification models on insurance data
+2. **Selects** the best-performing model automatically
+3. **Generates** a structured JSON decision summary explaining *which* model was chosen, *why*, and *what it means* for pricing
+4. **Passes** a comprehensive test suite via CI on every push
+
+The pipeline uses DVC-tracked data in production and synthetic fixtures in tests, ensuring full reproducibility without exposing sensitive data.
+
+## Success Metrics
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Unit tests | >= 5 passing | 21 passing |
+| CI pipeline | Green on task-dev | Active |
+| Decision JSON | Auto-generated | `results/decision_summary.json` |
+| Modular architecture | Clean separation | `src/{data,models,evaluation,decision}` |
+| Test isolation | Synthetic only | No DVC dependency in tests |
 
 ## Repository Structure
 
 ```
 predictive-insurance-risk-analysis/
-├── .github/
-│   ├── workflows/
-│   │   ├── ci.yml
-│   │   ├── code-quality.yml
-│   │   └── release.yml
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.md
-│   │   └── feature_request.md
-│   └── PULL_REQUEST_TEMPLATE.md
-├── .gitignore
-├── .pre-commit-config.yaml
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── LICENSE
-├── README.md
-├── docs/
-│   ├── architecture/
-│   ├── api/
-│   ├── guides/
-│   ├── task1/
-│   ├── task2/
-│   ├── task3/
-│   └── task4/
+├── .github/workflows/
+│   └── ci.yml                    # CI pipeline (pytest, fail on failure)
 ├── src/
 │   ├── data/
-│   │   ├── __init__.py
-│   │   ├── loaders.py
-│   │   └── validators.py
-│   ├── analysis/
-│   │   ├── __init__.py
-│   │   ├── task1/
-│   │   ├── task3/
-│   │   └── task4/
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── logger.py
-│   │   └── config.py
-│   └── __init__.py
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── fixtures/
-├── notebooks/
-│   └── exploratory/
+│   │   ├── loaders.py            # Data loading with file_path param
+│   │   └── preprocessing.py      # Missing values, features, encoding, split
+│   ├── models/
+│   │   ├── trainer.py            # Regression + classification training
+│   │   └── selector.py           # Automated best-model selection
+│   ├── evaluation/
+│   │   └── metrics.py            # RMSE, R², accuracy, F1, loss ratio
+│   ├── decision/
+│   │   └── justification.py      # JSON decision summary builder
+│   └── utils/
+│       ├── config.py             # YAML config loader
+│       └── logger.py             # Structured logging
 ├── scripts/
-│   ├── setup.py
-│   └── run_analysis.py
+│   └── run_pipeline.py           # End-to-end pipeline orchestrator
+├── tests/
+│   ├── test_data.py              # Data loading & preprocessing tests
+│   ├── test_model_selector.py    # Training & selection tests
+│   ├── test_metrics.py           # Metric computation tests
+│   ├── test_justification.py     # Decision JSON tests
+│   └── fixtures/
+│       └── sample_insurance_data.csv  # Synthetic 12-row dataset
+├── results/
+│   └── decision_summary.json     # Auto-generated decision artifact
 ├── config/
 │   └── config.yaml
 ├── requirements/
 │   ├── base.txt
-│   ├── dev.txt
-│   └── prod.txt
+│   └── dev.txt
 └── pyproject.toml
 ```
 
@@ -76,252 +72,90 @@ predictive-insurance-risk-analysis/
 
 - Python 3.9+
 - Git
-- pip or conda
+- pip
 
 ### Installation
 
-1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd predictive-insurance-risk-analysis
-```
-
-2. Create a virtual environment:
-```bash
+git clone https://github.com/GebSenait/Predictive-Insurance-Risk-Analysis.git
+cd Predictive-Insurance-Risk-Analysis
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements/base.txt
 pip install -r requirements/dev.txt
 ```
 
-4. Install pre-commit hooks:
+### Running Tests (no DVC data needed)
+
 ```bash
-pre-commit install
+pytest tests/ -v
 ```
 
-5. Set up DVC (Data Version Control):
-```bash
-# On Windows (PowerShell)
-.\scripts\setup_dvc.ps1
+### Running the Production Pipeline (requires DVC data)
 
-# On Unix/Linux/Mac
-chmod +x scripts/setup_dvc.sh
-./scripts/setup_dvc.sh
-```
-
-6. Pull data from DVC remote:
 ```bash
 dvc pull
+python scripts/run_pipeline.py
 ```
 
-### Running the Analysis
+This generates `results/decision_summary.json` with the selected model and business justification.
+
+## Data Strategy
+
+| Context | Data Source | Notes |
+|---------|------------|-------|
+| **Production** | `data/raw/MachineLearningRating_v3.txt` (DVC-tracked, ~529 MB) | Requires `dvc pull` |
+| **Testing** | `tests/fixtures/sample_insurance_data.csv` (12 rows, synthetic) | Always available, no DVC needed |
+
+## Architecture
+
+The pipeline follows a strict modular separation of concerns:
+
+- **`src/data/`** -- Loading and preprocessing (missing values, feature engineering, encoding)
+- **`src/models/`** -- Training suite (Linear, Decision Tree, Random Forest, Gradient Boosting) + automated selection
+- **`src/evaluation/`** -- Standalone metric functions (RMSE, R-squared, accuracy, precision, recall, F1, loss ratio)
+- **`src/decision/`** -- Business-aligned JSON justification output
+- **`scripts/run_pipeline.py`** -- Lightweight orchestration
+
+## Decision Summary Output
+
+The pipeline auto-generates `results/decision_summary.json`:
+
+```json
+{
+  "selected_model": "RandomForestRegressor",
+  "task_type": "regression",
+  "metric_name": "r2",
+  "metric_score": 0.8523,
+  "timestamp": "2026-02-15T16:15:24.964656+00:00",
+  "business_impact": "The selected regression model achieves an R-squared of 0.8523..."
+}
+```
+
+## Development
+
+### Branch Discipline
+
+- `main` -- Protected, stable releases only
+- `task-dev` -- Active development branch
+
+### Commit Convention
+
+```
+<type>: <description>
+```
+
+Types: `feat`, `fix`, `refactor`, `test`, `ci`, `docs`
+
+### Running Tests
 
 ```bash
-# Run Task 3: Statistical Hypothesis Testing
-python scripts/run_task3.py
-
-# Run Task 4: Predictive Modeling
-python scripts/run_task4.py
-
-# Run other analyses
-python scripts/run_analysis.py
+pytest tests/ -v
 ```
 
-## Data Version Control (DVC)
-
-This project uses **DVC (Data Version Control)** to ensure full reproducibility and auditability of data pipelines, meeting financial/insurance regulatory requirements.
-
-### Quick Start with DVC
-
-1. **Pull tracked data:**
-   ```bash
-   dvc pull
-   ```
-
-2. **Check data status:**
-   ```bash
-   dvc status
-   ```
-
-3. **View tracked files:**
-   ```bash
-   dvc list data/raw
-   ```
-
-### Reproducing the Pipeline
-
-To reproduce any analysis at a specific point in time:
-
-1. **Checkout the desired Git commit:**
-   ```bash
-   git checkout <commit-hash>
-   ```
-
-2. **Pull the corresponding data version:**
-   ```bash
-   dvc pull
-   ```
-
-3. **Run the analysis:**
-   ```bash
-   python scripts/run_analysis.py
-   ```
-
-### DVC Remote Storage
-
-- **Location**: `dvc-storage/` (local directory)
-- **Remote Name**: `local-storage`
-- **Configuration**: `.dvc/config`
-
-The remote storage is configured to use a local directory for versioned data. All data files are tracked via `.dvc` metadata files committed to Git, while actual data is stored in the remote storage.
-
-### Historical Data Versions
-
-To access historical versions of data:
-
-```bash
-# List all versions
-git log --oneline data/raw/MachineLearningRating_v3.txt.dvc
-
-# Checkout a specific version
-git checkout <commit-hash> data/raw/MachineLearningRating_v3.txt.dvc
-dvc checkout data/raw/MachineLearningRating_v3.txt.dvc
-```
-
-For detailed DVC documentation, see [docs/task2/README.md](docs/task2/README.md).
-
-## Task 3: Statistical Validation of Risk Drivers
-
-Task 3 implements statistical hypothesis testing to validate key assumptions about insurance risk drivers. The analysis tests four null hypotheses related to geographic, demographic, and profitability dimensions.
-
-### Quick Start
-
-```bash
-# Run Task 3 analysis
-python scripts/run_task3.py
-```
-
-### Key Features
-
-- **Four Hypothesis Tests**: Province, zip code, and gender-based risk comparisons
-- **Multiple Metrics**: Claim Frequency, Claim Severity, and Margin analysis
-- **Statistical Rigor**: Appropriate tests (t-test, chi-square, Mann-Whitney U) with normality checks
-- **Business Interpretations**: Actionable insights for pricing and segmentation strategies
-
-### Output
-
-After running, results are saved to:
-- `results/task3_results.json`: Complete test results
-- `results/reports/task3_statistical_report.md`: Comprehensive markdown report
-- `results/figures/hypothesis_test_summary.png`: Visualization summary
-
-For detailed documentation, see [docs/task3/README.md](docs/task3/README.md).
-
-## Task 4: Predictive Modeling for Risk-Based Pricing
-
-Task 4 implements predictive models to support ACIS's dynamic, risk-based pricing system. The analysis includes claim severity prediction, premium optimization, and claim probability estimation.
-
-### Quick Start
-
-```bash
-# Run Task 4 analysis
-python scripts/run_task4.py
-```
-
-### Key Features
-
-- **Claim Severity Model**: Predicts claim amounts for policies where claims occurred (Regression)
-- **Premium Optimization Model**: Predicts appropriate premium levels (Regression)
-- **Claim Probability Model**: Estimates probability of claims occurring (Classification)
-- **Multiple Algorithms**: Linear Regression, Decision Trees, Random Forest, Gradient Boosting, XGBoost
-- **Model Interpretability**: SHAP and LIME analysis to identify key risk drivers
-- **Comprehensive Evaluation**: RMSE, R² for regression; Accuracy, Precision, Recall, F1 for classification
-
-### Models Implemented
-
-1. **Claim Severity Model** (Regression)
-   - Target: `TotalClaims` (for policies with claims)
-   - Metrics: RMSE, R²
-   - Algorithms: Linear Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost
-
-2. **Premium Optimization Model** (Regression)
-   - Target: `TotalPremium`
-   - Metrics: RMSE, R²
-   - Algorithms: Linear Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost
-
-3. **Claim Probability Model** (Classification)
-   - Target: Binary indicator (1 if claim, 0 if no claim)
-   - Metrics: Accuracy, Precision, Recall, F1
-   - Algorithms: Logistic Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost
-   - Supports risk-based premium formula: `Premium = P(Claim) × Predicted Severity + Expense Loading + Profit Margin`
-
-### Output
-
-After running, results are saved to:
-- `results/task4/task4_results.json`: Complete model results
-- `results/reports/task4_modeling_report.md`: Comprehensive markdown report
-- `results/reports/task4_model_comparison.csv`: Model comparison table
-- `results/task4/task4_top_features.json`: Top influential features from interpretability analysis
-
-### Model Interpretability
-
-The analysis includes SHAP and LIME interpretability to identify the top 5-10 most influential features for each model, with business interpretations for pricing strategy.
-
-For detailed documentation, see [docs/task4/README.md](docs/task4/README.md).
-
-## Development Workflow
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development guidelines.
-
-### Branch Naming Convention
-
-- `feature/description` - New features
-- `bugfix/description` - Bug fixes
-- `hotfix/description` - Critical production fixes
-- `docs/description` - Documentation updates
-- `refactor/description` - Code refactoring
-
-### Commit Message Format
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
-
-```
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-```
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-
-## Testing
-
-```bash
-pytest tests/
-```
-
-## Code Quality
-
-This project uses:
-- `black` for code formatting
-- `flake8` for linting
-- `mypy` for type checking
-- `pytest` for testing
-
-## Documentation
-
-Full documentation is available in the `docs/` directory.
+All 21 tests run in under 25 seconds using only synthetic data.
 
 ## License
 
 See [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting pull requests.
 
