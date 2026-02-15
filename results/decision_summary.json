@@ -1,0 +1,15 @@
+{
+  "selected_model": "RandomForestRegressor",
+  "task_type": "regression",
+  "metric_name": "r2",
+  "metric_score": 0.8523,
+  "timestamp": "2026-02-15T16:15:24.964656+00:00",
+  "business_impact": "The selected regression model (RandomForestRegressor) achieves an R-squared of 0.8523 on the hold-out test set, explaining 85.2% of the variance in the target variable.  This level of accuracy supports data-driven premium pricing and reserve estimation.",
+  "model_rankings": [
+    {
+      "rank": 1,
+      "model_name": "RandomForestRegressor",
+      "score": 0.8523
+    }
+  ]
+}
