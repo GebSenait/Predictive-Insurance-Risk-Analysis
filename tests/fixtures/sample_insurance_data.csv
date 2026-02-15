@@ -1,0 +1,13 @@
+PolicyID,Province,PostalCode,Gender,Age,TotalPremium,TotalClaims,VehicleType
+1,Gauteng,2001,Male,35,1200.50,300.00,Sedan
+2,WesternCape,7001,Female,28,950.00,0.00,Hatchback
+3,KwaZuluNatal,4001,Male,45,1500.75,500.25,SUV
+4,Gauteng,2002,Female,52,1800.00,0.00,Sedan
+5,EasternCape,5001,Male,30,1100.00,150.00,Truck
+6,WesternCape,7002,Female,22,800.00,0.00,Hatchback
+7,Gauteng,2003,Male,40,1350.00,620.00,SUV
+8,KwaZuluNatal,4002,Female,55,1700.00,0.00,Sedan
+9,EasternCape,5002,Male,33,1050.00,200.00,Truck
+10,WesternCape,7003,Male,48,1400.00,0.00,Hatchback
+11,Gauteng,2004,Female,26,900.00,75.00,Sedan
+12,KwaZuluNatal,4003,Male,60,2000.00,800.00,SUV
