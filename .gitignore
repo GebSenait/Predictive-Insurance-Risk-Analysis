@@ -57,6 +57,7 @@ data/external/*
 *.csv
 *.xlsx
 *.parquet
+!tests/fixtures/sample_insurance_data.csv
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/external/.gitkeep
@@ -76,6 +77,7 @@ results/figures/*.png
 results/reports/*.md
 results/reports/*.csv
 results/*.json
+!results/decision_summary.json
 !results/.gitkeep
 !results/figures/.gitkeep
 !results/reports/.gitkeep
