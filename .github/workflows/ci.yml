@@ -38,4 +38,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/test_data.py tests/test_model_selector.py tests/test_metrics.py tests/test_justification.py -v --tb=short
+          pytest tests/ -v --tb=short
