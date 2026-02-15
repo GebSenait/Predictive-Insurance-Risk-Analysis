@@ -4,7 +4,7 @@ Trains multiple scikit-learn models on regression or classification tasks
 and returns structured results that downstream modules can consume.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import numpy as np
 import pandas as pd

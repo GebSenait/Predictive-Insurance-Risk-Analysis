@@ -5,7 +5,7 @@ metric, following the principle: *higher is better* for R-squared / F1 /
 accuracy, *lower is better* for RMSE.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 # ---------------------------------------------------------------------------
 # Constants
