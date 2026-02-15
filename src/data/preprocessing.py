@@ -5,12 +5,12 @@ Designed for production use with the DVC-tracked dataset and for testing with
 synthetic fixtures.
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.preprocessing import LabelEncoder
 
 # ---------------------------------------------------------------------------
 # Constants — no magic numbers
