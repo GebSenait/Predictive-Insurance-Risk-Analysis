@@ -1,9 +1,10 @@
 """Unit tests for configuration management."""
 
-import pytest
 from pathlib import Path
 
-from src.utils.config import load_config, get_config
+import pytest
+
+from src.utils.config import get_config, load_config
 
 
 def test_load_config_success(sample_config_file):
@@ -24,4 +25,3 @@ def test_get_config(sample_config_file):
     load_config(sample_config_file)
     log_level = get_config("logging.level")
     assert log_level == "INFO"
-

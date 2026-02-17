@@ -39,9 +39,7 @@ class DataValidator:
         # Check for required columns
         missing_columns = set(required_columns) - set(df.columns)
         if missing_columns:
-            raise ValueError(
-                f"Missing required columns: {', '.join(missing_columns)}"
-            )
+            raise ValueError(f"Missing required columns: {', '.join(missing_columns)}")
 
         # Check column types if provided
         if column_types:
@@ -144,4 +142,3 @@ class DataValidator:
             "missing_values": self.check_missing_values(df),
             "duplicates": self.check_duplicates(df),
         }
-

@@ -45,9 +45,7 @@ def select_best_model(
         scored.append((metrics_dict[metric], res))
 
     if not scored:
-        raise ValueError(
-            f"Metric '{metric}' not found in any result under '{split}'."
-        )
+        raise ValueError(f"Metric '{metric}' not found in any result under '{split}'.")
 
     higher_is_better = metric in HIGHER_IS_BETTER_METRICS
     scored.sort(key=lambda x: x[0], reverse=higher_is_better)

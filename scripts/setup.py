@@ -50,4 +50,3 @@ def create_directories():
 if __name__ == "__main__":
     create_directories()
     print("Project directories initialized successfully!")
-

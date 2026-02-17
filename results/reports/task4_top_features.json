@@ -1,0 +1,93 @@
+{
+  "severity": {
+    "top_10_features": [
+      {
+        "feature": "PostalCode <= 2003.00",
+        "combined_importance": 75206.84835166263
+      },
+      {
+        "feature": "PostalCode > 6001.00",
+        "combined_importance": 72425.18046537905
+      },
+      {
+        "feature": "PostalCodePrefix_200 <= 0.00",
+        "combined_importance": 62185.104843966226
+      },
+      {
+        "feature": "0.00 < PostalCodePrefix_200 <= 1.00",
+        "combined_importance": 61989.22427196026
+      },
+      {
+        "feature": "PostalCodePrefix_700 <= 0.00",
+        "combined_importance": 49377.43295724588
+      },
+      {
+        "feature": "PostalCodePrefix_700 > 0.00",
+        "combined_importance": 47498.66058517683
+      },
+      {
+        "feature": "PostalCode",
+        "combined_importance": 34631.420954283494
+      },
+      {
+        "feature": "4002.00 < PostalCode <= 6001.00",
+        "combined_importance": 30467.57038133623
+      },
+      {
+        "feature": "PostalCodePrefix_600 <= 0.00",
+        "combined_importance": 27283.396638453047
+      },
+      {
+        "feature": "PostalCodePrefix_200",
+        "combined_importance": 25870.82935349249
+      }
+    ]
+  },
+  "premium": {
+    "top_10_features": [
+      {
+        "feature": "PostalCode <= 2003.00",
+        "combined_importance": 5265.450805652556
+      },
+      {
+        "feature": "PostalCodePrefix_200 <= 0.00",
+        "combined_importance": 4333.403968336279
+      },
+      {
+        "feature": "0.00 < PostalCodePrefix_200 <= 1.00",
+        "combined_importance": 4270.178772132387
+      },
+      {
+        "feature": "PostalCodePrefix_700 <= 0.00",
+        "combined_importance": 3444.569600225902
+      },
+      {
+        "feature": "PostalCode",
+        "combined_importance": 2259.601758449009
+      },
+      {
+        "feature": "5001.00 < PostalCode <= 6001.00",
+        "combined_importance": 2164.9165470973176
+      },
+      {
+        "feature": "PostalCodePrefix_200",
+        "combined_importance": 1943.8549950718664
+      },
+      {
+        "feature": "PostalCodePrefix_600 <= 0.00",
+        "combined_importance": 1851.1980075013714
+      },
+      {
+        "feature": "PostalCodePrefix_400 > 0.00",
+        "combined_importance": 1263.0150334227787
+      },
+      {
+        "feature": "PostalCodePrefix_400 <= 0.00",
+        "combined_importance": 1213.6036056467547
+      }
+    ]
+  },
+  "claim_probability": {
+    "top_10_features": []
+  }
+}

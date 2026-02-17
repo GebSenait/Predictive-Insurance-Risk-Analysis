@@ -45,6 +45,7 @@ coverage.xml
 htmlcov/
 .tox/
 .hypothesis/
+.mypy_cache/
 
 # Environment variables
 .env
@@ -60,6 +61,7 @@ data/external/*
 *.parquet
 !tests/fixtures/sample_insurance_data.csv
 !data/raw/.gitkeep
+!data/raw/MachineLearningRating_sample.txt
 !data/processed/.gitkeep
 !data/external/.gitkeep
 
@@ -79,6 +81,7 @@ results/reports/*.md
 results/reports/*.csv
 results/*.json
 !results/decision_summary.json
+!results/model_benchmark_summary.json
 !results/.gitkeep
 !results/figures/.gitkeep
 !results/reports/.gitkeep

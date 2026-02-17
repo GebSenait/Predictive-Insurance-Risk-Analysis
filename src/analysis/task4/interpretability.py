@@ -8,12 +8,14 @@ import pandas as pd
 
 try:
     import shap
+
     SHAP_AVAILABLE = True
 except ImportError:
     SHAP_AVAILABLE = False
 
 try:
     from lime import lime_tabular
+
     LIME_AVAILABLE = True
 except ImportError:
     LIME_AVAILABLE = False
@@ -78,7 +80,12 @@ class ModelInterpreter:
             # Create SHAP explainer
             # Use TreeExplainer for tree-based models, otherwise KernelExplainer
             model_type = type(model).__name__.lower()
-            if "tree" in model_type or "forest" in model_type or "xgb" in model_type or "gradient" in model_type:
+            if (
+                "tree" in model_type
+                or "forest" in model_type
+                or "xgb" in model_type
+                or "gradient" in model_type
+            ):
                 explainer = shap.TreeExplainer(model)
                 shap_values = explainer.shap_values(X_test_sample)
             else:
@@ -90,7 +97,8 @@ class ModelInterpreter:
                     # Fallback to KernelExplainer (slower)
                     self.logger.info("Using KernelExplainer (this may take a while)...")
                     explainer = shap.KernelExplainer(
-                        model.predict, X_train.sample(n=min(100, len(X_train)), random_state=42)
+                        model.predict,
+                        X_train.sample(n=min(100, len(X_train)), random_state=42),
                     )
                     shap_values = explainer.shap_values(X_test_sample)
 
@@ -102,10 +110,12 @@ class ModelInterpreter:
             if len(shap_values.shape) > 2:
                 shap_values = shap_values.reshape(shap_values.shape[0], -1)
 
-            feature_importance = pd.DataFrame({
-                "feature": feature_names[:shap_values.shape[1]],
-                "importance": np.abs(shap_values).mean(axis=0)
-            }).sort_values("importance", ascending=False)
+            feature_importance = pd.DataFrame(
+                {
+                    "feature": feature_names[: shap_values.shape[1]],
+                    "importance": np.abs(shap_values).mean(axis=0),
+                }
+            ).sort_values("importance", ascending=False)
 
             # Get top features
             top_features = feature_importance.head(10).to_dict("records")
@@ -118,7 +128,9 @@ class ModelInterpreter:
                 "X_test_sample": X_test_sample,
             }
 
-            self.logger.info(f"SHAP analysis complete. Top feature: {top_features[0]['feature']}")
+            self.logger.info(
+                f"SHAP analysis complete. Top feature: {top_features[0]['feature']}"
+            )
             return results
 
         except Exception as e:
@@ -178,11 +190,13 @@ class ModelInterpreter:
                     model.predict,
                     num_features=10,
                 )
-                explanations.append({
-                    "index": idx,
-                    "explanation": explanation,
-                    "feature_importance": explanation.as_list(),
-                })
+                explanations.append(
+                    {
+                        "index": idx,
+                        "explanation": explanation,
+                        "feature_importance": explanation.as_list(),
+                    }
+                )
 
             # Aggregate feature importance across samples
             all_features = {}
@@ -196,10 +210,12 @@ class ModelInterpreter:
             avg_importance = {
                 feat: np.mean(imps) for feat, imps in all_features.items()
             }
-            feature_importance = pd.DataFrame({
-                "feature": list(avg_importance.keys()),
-                "importance": list(avg_importance.values())
-            }).sort_values("importance", ascending=False)
+            feature_importance = pd.DataFrame(
+                {
+                    "feature": list(avg_importance.keys()),
+                    "importance": list(avg_importance.values()),
+                }
+            ).sort_values("importance", ascending=False)
 
             results = {
                 "explanations": explanations,
@@ -238,7 +254,10 @@ class ModelInterpreter:
             for feat in shap_results["top_features"]:
                 feat_name = feat["feature"]
                 if feat_name not in features_dict:
-                    features_dict[feat_name] = {"shap_importance": 0, "lime_importance": 0}
+                    features_dict[feat_name] = {
+                        "shap_importance": 0,
+                        "lime_importance": 0,
+                    }
                 features_dict[feat_name]["shap_importance"] = feat["importance"]
 
         # Add LIME features
@@ -246,14 +265,20 @@ class ModelInterpreter:
             for feat in lime_results["top_features"]:
                 feat_name = feat["feature"]
                 if feat_name not in features_dict:
-                    features_dict[feat_name] = {"shap_importance": 0, "lime_importance": 0}
+                    features_dict[feat_name] = {
+                        "shap_importance": 0,
+                        "lime_importance": 0,
+                    }
                 features_dict[feat_name]["lime_importance"] = feat["importance"]
 
         # Combine and rank
         top_features = []
         for feat_name, importances in features_dict.items():
             # Average importance if both available, otherwise use available one
-            if importances["shap_importance"] > 0 and importances["lime_importance"] > 0:
+            if (
+                importances["shap_importance"] > 0
+                and importances["lime_importance"] > 0
+            ):
                 avg_importance = (
                     importances["shap_importance"] + importances["lime_importance"]
                 ) / 2
@@ -262,12 +287,14 @@ class ModelInterpreter:
             else:
                 avg_importance = importances["lime_importance"]
 
-            top_features.append({
-                "feature": feat_name,
-                "shap_importance": importances["shap_importance"],
-                "lime_importance": importances["lime_importance"],
-                "combined_importance": avg_importance,
-            })
+            top_features.append(
+                {
+                    "feature": feat_name,
+                    "shap_importance": importances["shap_importance"],
+                    "lime_importance": importances["lime_importance"],
+                    "combined_importance": avg_importance,
+                }
+            )
 
         # Sort by combined importance
         top_features.sort(key=lambda x: x["combined_importance"], reverse=True)
@@ -326,4 +353,3 @@ class ModelInterpreter:
         )
 
         return results
-

@@ -20,6 +20,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from loguru import logger
+
 from src.data.loaders import load_insurance_data
 from src.data.preprocessing import run_preprocessing_pipeline
 from src.decision.justification import (
@@ -27,8 +29,7 @@ from src.decision.justification import (
     save_decision_summary,
 )
 from src.models.selector import get_model_ranking, select_best_model
-from src.models.trainer import train_regression_models, train_classification_models
-
+from src.models.trainer import train_classification_models, train_regression_models
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -42,6 +43,7 @@ CLASSIFICATION_METRIC = "f1"
 
 def main() -> None:
     """Run the full pipeline."""
+    logger.info("Pipeline execution started")
     print("=" * 72)
     print("  Predictive Insurance Risk Analysis — Pipeline")
     print("=" * 72)
@@ -102,9 +104,11 @@ def main() -> None:
     )
     out_file = save_decision_summary(summary, output_dir=RESULTS_DIR)
     print(f"\n[DECISION] Summary written to {out_file}")
+    logger.info(f"Selected model: {best_reg['model_name']}")
     print("=" * 72)
     print("  Pipeline complete.")
     print("=" * 72)
+    logger.success("Pipeline execution completed successfully")
 
 
 if __name__ == "__main__":

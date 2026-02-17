@@ -144,4 +144,3 @@ class MetricCalculator:
             "loss_ratio": self.calculate_loss_ratio(df, group_col),
         }
         return metrics
-

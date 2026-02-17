@@ -7,13 +7,15 @@ import pandas as pd
 import pytest
 
 from src.models.selector import get_model_ranking, select_best_model
-from src.models.trainer import train_regression_models, train_classification_models
+from src.models.trainer import train_classification_models, train_regression_models
 
 
 class TestModelTraining:
     """Verify that the trainer returns valid result dicts."""
 
-    def test_regression_models_return_results(self, sample_dataframe: pd.DataFrame) -> None:
+    def test_regression_models_return_results(
+        self, sample_dataframe: pd.DataFrame
+    ) -> None:
         """All regression models train and produce metrics."""
         X = sample_dataframe[["feature_a", "feature_b"]]
         y = sample_dataframe["target_reg"]
@@ -24,7 +26,9 @@ class TestModelTraining:
             assert "test_metrics" in res
             assert "r2" in res["test_metrics"]
 
-    def test_classification_models_return_results(self, sample_dataframe: pd.DataFrame) -> None:
+    def test_classification_models_return_results(
+        self, sample_dataframe: pd.DataFrame
+    ) -> None:
         """All classification models train and produce metrics."""
         X = sample_dataframe[["feature_a", "feature_b"]]
         y = sample_dataframe["target_cls"]

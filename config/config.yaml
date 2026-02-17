@@ -5,6 +5,8 @@ data:
   raw_path: "data/raw"
   processed_path: "data/processed"
   external_path: "data/external"
+  # Sample dataset (same schema as MachineLearningRating_v3.txt) for local/CI when full data causes OOM
+  sample_filename: "MachineLearningRating_sample.txt"
 
 # Logging configuration
 logging:
@@ -26,6 +28,8 @@ analysis:
     min_samples_gender: 1000
   task4:
     enabled: true
+    # Use sample data (data/raw/MachineLearningRating_sample.txt) to avoid OOM when full dataset unavailable
+    use_sample_data: true
     random_state: 42  # Random seed for reproducibility
     test_size: 0.3  # Proportion of data for testing (30%)
     # Model hyperparameters

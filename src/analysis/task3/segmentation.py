@@ -211,4 +211,3 @@ class DataSegmentation:
         )
 
         return group_a, group_b
-

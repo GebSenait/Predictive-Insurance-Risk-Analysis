@@ -50,8 +50,12 @@ def classification_metrics(
     """
     return {
         "accuracy": float(accuracy_score(y_true, y_pred)),
-        "precision": float(precision_score(y_true, y_pred, average="binary", zero_division=0)),
-        "recall": float(recall_score(y_true, y_pred, average="binary", zero_division=0)),
+        "precision": float(
+            precision_score(y_true, y_pred, average="binary", zero_division=0)
+        ),
+        "recall": float(
+            recall_score(y_true, y_pred, average="binary", zero_division=0)
+        ),
         "f1": float(f1_score(y_true, y_pred, average="binary", zero_division=0)),
     }
 

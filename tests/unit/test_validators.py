@@ -36,4 +36,3 @@ def test_check_duplicates_no_duplicates():
     validator = DataValidator()
     result = validator.check_duplicates(df)
     assert result["duplicate_count"] == 0
-

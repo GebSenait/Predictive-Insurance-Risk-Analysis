@@ -130,7 +130,7 @@ To reproduce an analysis from a specific Git commit:
 
 4. **Run the analysis:**
    ```bash
-   python scripts/run_analysis.py
+   python scripts/run_pipeline.py
    ```
 
 ### Viewing Data History

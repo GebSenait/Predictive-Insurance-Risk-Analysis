@@ -267,7 +267,7 @@ To reproduce any analysis at a specific point in time:
 
 3. **Run the analysis:**
    ```bash
-   python scripts/run_analysis.py
+   python scripts/run_pipeline.py
    ```
 ```
 

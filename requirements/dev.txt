@@ -19,13 +19,3 @@ pre-commit>=3.6.0
 # Security
 bandit>=1.7.5
 safety>=3.0.0
-
-# Documentation
-sphinx>=7.2.0
-sphinx-rtd-theme>=2.0.0
-
-# Jupyter for notebooks
-jupyter>=1.0.0
-jupyterlab>=4.0.0
-ipykernel>=6.27.0
-

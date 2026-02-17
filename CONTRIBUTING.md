@@ -4,21 +4,17 @@
 
 ### 1. Branch Strategy
 
-We follow a Git Flow-inspired branching strategy:
+Branches used in this project (see also README):
 
-- **`main`** - Production-ready code
-- **`develop`** - Integration branch for features
-- **`feature/*`** - Feature development branches
-- **`bugfix/*`** - Bug fix branches
-- **`hotfix/*`** - Critical production fixes
-- **`release/*`** - Release preparation branches
+- **`main`** — Protected; stable, reviewed releases only.
+- **`task-dev`** — Active development; CI runs on every push.
+- **`feature/*`** — Feature branches (e.g. from `task-dev`).
 
 ### 2. Creating a Branch
 
 ```bash
-# From develop branch
-git checkout develop
-git pull origin develop
+git checkout task-dev
+git pull origin task-dev
 git checkout -b feature/your-feature-name
 ```
 
@@ -69,7 +65,7 @@ Fixes #456
    - Ensure all tests pass: `pytest`
    - Run code quality checks: `black .`, `flake8`, `mypy`
    - Update documentation if needed
-   - Rebase on latest develop branch
+   - Rebase on latest task-dev (or main, depending on target branch)
 
 2. **PR Title Format:**
    - Follow commit message format: `<type>(<scope>): <subject>`

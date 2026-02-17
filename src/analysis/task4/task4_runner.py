@@ -27,15 +27,21 @@ class Task4Runner:
         self.logger = logger
 
         # Setup paths
-        self.results_path = Path(self.config.get("output", {}).get("results_path", "results"))
-        self.figures_path = Path(self.config.get("output", {}).get("figures_path", "results/figures"))
-        self.reports_path = Path(self.config.get("output", {}).get("reports_path", "results/reports"))
-        
+        self.results_path = Path(
+            self.config.get("output", {}).get("results_path", "results")
+        )
+        self.figures_path = Path(
+            self.config.get("output", {}).get("figures_path", "results/figures")
+        )
+        self.reports_path = Path(
+            self.config.get("output", {}).get("reports_path", "results/reports")
+        )
+
         # Create task4 subdirectories
         self.task4_results_path = self.results_path / "task4"
         self.task4_figures_path = self.figures_path / "task4"
         self.task4_reports_path = self.reports_path
-        
+
         self.task4_results_path.mkdir(parents=True, exist_ok=True)
         self.task4_figures_path.mkdir(parents=True, exist_ok=True)
         self.task4_reports_path.mkdir(parents=True, exist_ok=True)
@@ -193,7 +199,9 @@ class Task4Runner:
             X_train = task_results["X_train"]
             X_test = task_results["X_test"]
             feature_names = task_results["feature_names"]
-            task_type = "regression" if task_name != "claim_probability" else "classification"
+            task_type = (
+                "regression" if task_name != "claim_probability" else "classification"
+            )
 
             # Run interpretability
             interp_results = self.interpreter.interpret_model(
@@ -209,7 +217,9 @@ class Task4Runner:
 
         return interpretability_results
 
-    def save_results(self, all_results: Dict, filename: str = "task4_results.json") -> None:
+    def save_results(
+        self, all_results: Dict, filename: str = "task4_results.json"
+    ) -> None:
         """
         Save all results to JSON.
 
@@ -226,9 +236,9 @@ class Task4Runner:
                 # Skip complex objects in interpretability
                 serializable_results[key] = {
                     model_name: {
-                        "top_features": results.get("top_features", [])
-                        for model_name, results in value.items()
+                        "top_features": results.get("top_features", []),
                     }
+                    for model_name, results in value.items()
                 }
             else:
                 # Extract metrics from model results
@@ -245,12 +255,15 @@ class Task4Runner:
                             for k, v in model_results.items()
                             if k not in ["model", "y_test_pred"]
                         }
-                        for model_name, model_results in value.get("model_results", {}).items()
+                        for model_name, model_results in value.get(
+                            "model_results", {}
+                        ).items()
                     },
                 }
 
         results_path = self.task4_results_path / filename
         import json
+
         with open(results_path, "w", encoding="utf-8") as f:
             json.dump(serializable_results, f, indent=2, default=str)
 
@@ -271,7 +284,17 @@ class Task4Runner:
         self.logger.info("\n" + "=" * 80)
         self.logger.info("STEP 1: DATA PREPARATION")
         self.logger.info("=" * 80)
-        datasets = self.data_preprocessor.full_pipeline()
+        use_sample = self.task4_config.get("use_sample_data", False)
+        data_filename = (
+            self.config.get("data", {}).get(
+                "sample_filename", "MachineLearningRating_sample.txt"
+            )
+            if use_sample
+            else "MachineLearningRating_v3.txt"
+        )
+        if use_sample:
+            self.logger.info(f"Using sample dataset: {data_filename}")
+        datasets = self.data_preprocessor.full_pipeline(filename=data_filename)
 
         # Step 2: Model training
         self.logger.info("\n" + "=" * 80)
@@ -287,7 +310,9 @@ class Task4Runner:
         self.logger.info("\n" + "=" * 80)
         self.logger.info("STEP 3: MODEL INTERPRETABILITY")
         self.logger.info("=" * 80)
-        all_results["interpretability"] = self.run_interpretability_analysis(all_results)
+        all_results["interpretability"] = self.run_interpretability_analysis(
+            all_results
+        )
 
         # Step 4: Reporting
         self.logger.info("\n" + "=" * 80)
@@ -300,7 +325,9 @@ class Task4Runner:
         # Generate reports
         self.report_generator.generate_markdown_report(all_results)
         self.report_generator.save_results_table(all_results)
-        self.report_generator.save_interpretability_summary(all_results["interpretability"])
+        self.report_generator.save_interpretability_summary(
+            all_results["interpretability"]
+        )
 
         self.logger.info("=" * 80)
         self.logger.info("TASK 4 COMPLETE!")
@@ -309,4 +336,3 @@ class Task4Runner:
         self.logger.info(f"Reports saved to: {self.task4_reports_path}")
 
         return all_results
-

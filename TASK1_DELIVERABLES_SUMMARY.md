@@ -149,7 +149,7 @@ This document provides a comprehensive summary of all deliverables for Task 1 of
 - Modular design for future tasks
 
 #### `scripts/`
-- `run_analysis.py` - Main analysis execution script
+- `run_pipeline.py` - End-to-end pipeline; `run_task3.py` / `run_task4.py` - Task entry points
 - `setup.py` - Project initialization script
 
 ---

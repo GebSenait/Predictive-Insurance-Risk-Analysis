@@ -2,439 +2,147 @@
 
 [![CI](https://github.com/GebSenait/Predictive-Insurance-Risk-Analysis/actions/workflows/ci.yml/badge.svg?branch=task-dev)](https://github.com/GebSenait/Predictive-Insurance-Risk-Analysis/actions/workflows/ci.yml)
 
-**Author:** Senait Gebreab | Data Science Engineer
+**Description:** production-ready pipeline for AlphaCare Insurance Solutions (ACIS) that turns raw insurance data into statistically validated risk insights and model-backed pricing decisions, with full reproducibility and audit-ready artifacts.
 
-## Project Overview
+## Executive Summary
 
-This repository implements a **production-ready Predictive Insurance Risk Analysis pipeline** for AlphaCare Insurance Solutions (ACIS). The project delivers a full data science lifecycle -- from raw data ingestion and statistical validation through predictive modeling to automated, business-aligned decision outputs -- all backed by reproducible data versioning, modular architecture, and continuous integration.
+This capstone delivers an end-to-end Predictive Insurance Risk Analysis system: data ingestion, hypothesis testing on risk drivers, multi-model pricing and severity estimation, and automated decision justification (JSON artifacts that explain which model was chosen and why). All of it is versioned (DVC), tested (32 unit tests), and CI-validated so that pricing recommendations are traceable to a specific commit, dataset, and metric.
 
-**Project Status:**
+## Table of Contents
 
-| Task | Description | Status |
-|------|-------------|--------|
-| Task 1 | Repository infrastructure and code quality setup | Complete |
-| Task 2 | Reproducible & Auditable Data Pipeline with DVC | Complete |
-| Task 3 | Statistical Validation of Risk Drivers (A/B Hypothesis Testing) | Complete |
-| Task 4 | Predictive Modeling for Risk-Based Pricing and Severity Estimation | Complete |
-| Enhancement | Modular pipeline with automated decision justification, CI/CD, and test suite | Complete |
-
----
+- [Executive Summary](#executive-summary)
+- [Business Problem](#business-problem)
+- [Why This Matters for Finance](#why-this-matters-for-finance)
+- [Solution Overview](#solution-overview)
+- [Key Results](#key-results)
+- [What Makes This Different](#what-makes-this-different)
+- [Evidence & Reliability](#evidence--reliability)
+- [Project Structure](#project-structure)
+- [Quick Start](#quick-start)
+- [Technical Details](#technical-details)
+- [Future Improvements](#future-improvements)
+- [Lessons Learned](#lessons-learned)
+- [Author](#author)
+- [License & Contributing](#license--contributing)
 
 ## Business Problem
 
-Insurance pricing decisions rely on predictive models, but stakeholders across actuarial, underwriting, and executive teams struggle to **interpret and trust technical outputs**. The core gaps are:
+Pricing and risk decisions depend on models, but stakeholders often cannot see why a model was chosen or what it means for the business. In addition:
 
-- **Opaque model selection** -- Models are trained and compared, but there is no structured artifact explaining *why* a particular model was chosen and *what it means* for the business.
-- **Fragile reproducibility** -- Without data versioning, results change silently when underlying data is updated, eroding trust in pricing recommendations.
-- **No automated validation** -- Manual testing allows regressions to slip into production logic undetected.
-- **Disconnected analysis stages** -- Statistical validation (hypothesis testing) and predictive modeling exist as separate workflows with no unified pipeline or shared data contract.
+- **Model choice is opaque** — no single artifact that explains selection and impact.
+- **Results are hard to reproduce** — changing data or code can silently change outputs.
+- **Validation is manual** — logic changes can slip through without automated checks.
+- **Workflows are fragmented** — hypothesis testing and modeling live in separate, unaligned flows.
 
-## Proposed Solution
+## Why This Matters for Finance
 
-This project addresses each gap with a layered, modular architecture:
+- **Auditability:** Regulators and internal audit need to see why a price was chosen. This project produces structured decision artifacts (e.g. `decision_summary.json`) with model name, metric score, timestamp, and git commit — not just a number.
+- **Reproducibility:** Re-running on the same commit and DVC state yields the same outputs. That supports compliance and dispute resolution.
+- **Trust:** Actuarial and underwriting teams get plain-language business impact for the chosen model, plus SHAP/LIME-style interpretability for Task 4, so technical choices are explainable.
 
-| Gap | Solution | Implementation |
-|-----|----------|----------------|
-| Opaque model selection | **Automated decision justification** -- a JSON artifact with selected model, score, timestamp, and plain-language business impact | `src/decision/justification.py` |
-| Fragile reproducibility | **DVC data versioning** -- 529 MB production dataset tracked with content-addressable storage; any historical version recoverable | `data/raw/*.dvc` |
-| No automated validation | **31 unit tests + GitHub Actions CI** -- tests run on every push; pipeline fails on any test failure | `tests/` + `.github/workflows/ci.yml` |
-| Disconnected stages | **Unified modular pipeline** -- shared data loaders, preprocessing, and evaluation metrics across all tasks | `src/{data,models,evaluation,decision}/` |
+## Solution Overview
 
----
+The project tackles these with a modular, config-driven pipeline:
 
-## Key Results and Insights
+1. **Automated decision justification** — After training, the best model is selected by a fixed metric (e.g. R² or F1); a JSON artifact records the choice, score, timestamp, git commit, and a short business interpretation.
+2. **DVC for data** — Production data is versioned; config and code live in Git. Same commit + same DVC state ⇒ same results.
+3. **Shared data and evaluation** — One `src/` layout: `data/`, `models/`, `evaluation/`, `decision/`, plus task-specific `analysis/task3/` and `analysis/task4/`. All tasks use the same loaders and metrics.
+4. **CI and tests** — 32 unit tests run on every push (Python 3.9–3.11); no DVC or production data required for tests.
 
-### Task 3: Statistical Validation of Risk Drivers
+Further implementation detail (design principles, code quality tools, branch strategy) is in [docs/](docs/) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Four null hypotheses were tested using appropriate statistical methods (t-test, chi-square, Mann-Whitney U) at significance level alpha = 0.05:
+## Key Results
 
-| Hypothesis | Metric Tested | Statistical Test | Key Finding |
-|------------|---------------|------------------|-------------|
-| H0: No risk differences across **provinces** | Claim Frequency, Severity | Chi-square, Mann-Whitney U | Significant differences detected -- geographic pricing tiers recommended |
-| H0: No risk differences between **zip codes** | Claim Frequency, Severity | Chi-square, Mann-Whitney U | Significant variation -- supports postal-code-based risk segmentation |
-| H0: No margin difference between **zip codes** | Margin (Premium - Claims) | t-test / Mann-Whitney U | Profitability varies by region -- pricing adjustments warranted |
-| H0: No risk difference between **genders** | Claim Frequency, Severity | Chi-square, Mann-Whitney U | Results inform gender-based risk assessment (subject to regulatory constraints) |
+- **Task 3 (Statistical validation):** Four hypotheses tested (provinces, zip codes, margin by region, gender) at α = 0.05. Geographic risk differences were significant; province- and postal-code-level pricing tiers are supported. See [docs/task3/README.md](docs/task3/README.md).
+- **Task 4 (Predictive modeling):** Three tasks — claim severity (regression), premium (regression), claim probability (classification). Each compares five algorithms; best model is chosen by test R² or F1. Risk-based formula: *Premium = P(Claim) × Predicted Severity + expense loading + margin.* SHAP/LIME used for interpretability. See [docs/task4/README.md](docs/task4/README.md).
+- **Decision artifact:** Each pipeline run produces `results/decision_summary.json` (and optionally `results/model_benchmark_summary.json`) with selected model, metric, timestamp, and git commit for full traceability.
 
-**Business Implication:** Geographic location is a statistically significant risk driver. ACIS should consider province-level and postal-code-level premium adjustments while maintaining regulatory compliance for demographic factors.
+## What Makes This Different
 
-### Task 4: Predictive Modeling for Risk-Based Pricing
+- **Decision artifact, not just a model:** Every run writes a JSON summary (selected model, score, business impact). No "black box" recommendation.
+- **One pipeline, one data contract:** Task 3 (hypothesis testing) and Task 4 (predictive modeling) share the same loaders, preprocessing, and config — no disconnected scripts.
+- **Data versioning with DVC:** The 529 MB production dataset is tracked; any historical version can be restored for re-runs or audits.
+- **Automated quality gate:** 32 tests and GitHub Actions CI; a failing test blocks the pipeline. No "continue on error."
 
-Three modeling tasks were completed, each comparing 5 algorithms:
+## Evidence & Reliability
 
-**1. Claim Severity Model (Regression)**
-- Target: `TotalClaims` for policies with claims > 0
-- Algorithms: Linear Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost
-- Selection metric: Highest test R-squared
-- Use case: Reserve setting and expected loss estimation
+- **32 tests** cover data loading, preprocessing, model training/selection, metrics, decision JSON structure, and config (e.g. fixed `random_state=42`). Run: `pytest tests/ -v`. Tests use synthetic or sample data only; no DVC pull required.
+- **CI:** GitHub Actions runs the full suite on push to `task-dev` and on PRs to `main`. Any failure blocks the pipeline.
+- **Reproducibility:** Same Git commit, DVC state, and `config/config.yaml` produce the same outputs (fixed seed, config-driven splits, and lock file).
 
-**2. Premium Optimization Model (Regression)**
-- Target: `TotalPremium`
-- Algorithms: Linear Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost
-- Selection metric: Highest test R-squared
-- Use case: Dynamic, data-driven premium pricing
-
-**3. Claim Probability Model (Classification)**
-- Target: Binary indicator (1 if claim occurred, 0 otherwise)
-- Algorithms: Logistic Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost
-- Selection metric: Highest test F1 score
-- Use case: Risk segmentation and the core premium formula
-
-**Risk-Based Premium Formula:**
+## Project Structure
 
 ```
-Premium = P(Claim) x Predicted Severity + Expense Loading + Profit Margin
+├── src/           # data, models, evaluation, decision, analysis (task3, task4), utils
+├── scripts/       # run_pipeline.py, run_task3.py, run_task4.py, generate_sample_data.py, setup.py
+├── tests/         # 32 unit tests (data, metrics, selector, justification, config, loaders, validators, reproducibility)
+├── config/        # config.yaml (paths, alpha, random_state, task4 hyperparameters)
+├── data/raw/      # DVC-tracked production data + optional MachineLearningRating_sample.txt for local/CI
+├── results/       # decision_summary.json, model_benchmark_summary.json, task4/task3 outputs
+├── docs/          # task2, task3, task4, guides, architecture
+└── requirements/  # base.txt, dev.txt, prod.txt, lock.txt
 ```
 
-**Model Interpretability:** SHAP and LIME analyses identified the top 5-10 features driving each model's predictions, enabling actuaries and underwriters to validate model logic against domain knowledge.
+Full directory tree and design principles: [docs/IMPLEMENTATION_GUIDE.md](docs/IMPLEMENTATION_GUIDE.md) · [docs/architecture/README.md](docs/architecture/README.md)
 
-### Pipeline Enhancement: Automated Decision Justification
-
-The pipeline now auto-generates `results/decision_summary.json` after every run:
-
-```json
-{
-  "selected_model": "RandomForestRegressor",
-  "task_type": "regression",
-  "metric_name": "r2",
-  "metric_score": 0.8523,
-  "timestamp": "2026-02-15T16:15:24.964656+00:00",
-  "business_impact": "The selected regression model (RandomForestRegressor) achieves an R-squared of 0.8523 on the hold-out test set, explaining 85.2% of the variance in the target variable. This level of accuracy supports data-driven premium pricing and reserve estimation.",
-  "model_rankings": [
-    { "rank": 1, "model_name": "RandomForestRegressor", "score": 0.8523 }
-  ]
-}
-```
-
-This artifact serves as the bridge between data science outputs and business decision-making -- every pricing recommendation is traceable to a specific model, metric, and timestamp.
-
----
-
-## Architecture and Code Structure
-
-```
-predictive-insurance-risk-analysis/
-│
-├── .github/workflows/
-│   └── ci.yml                          # CI: pytest on push, fails on failure
-│
-├── src/
-│   ├── data/
-│   │   ├── loaders.py                  # Data loading (accepts file_path for test injection)
-│   │   ├── preprocessing.py            # Missing values, feature engineering, encoding, split
-│   │   └── validators.py               # Schema and data quality validation
-│   │
-│   ├── models/
-│   │   ├── trainer.py                  # Regression + classification model training suite
-│   │   └── selector.py                 # Automated best-model selection and ranking
-│   │
-│   ├── evaluation/
-│   │   └── metrics.py                  # RMSE, R², accuracy, precision, recall, F1, loss ratio
-│   │
-│   ├── decision/
-│   │   └── justification.py            # Structured JSON decision summary builder
-│   │
-│   ├── analysis/
-│   │   ├── task3/                      # Statistical hypothesis testing modules
-│   │   │   ├── hypothesis_testing.py   # Main runner for 4 hypotheses
-│   │   │   ├── metrics.py             # Claim frequency, severity, margin, loss ratio
-│   │   │   ├── segmentation.py        # A/B group creation
-│   │   │   ├── statistical_tests.py   # t-test, Mann-Whitney U, chi-square
-│   │   │   ├── reporting.py           # Markdown report with business interpretations
-│   │   │   └── visualizations.py      # Summary plots
-│   │   └── task4/                      # Predictive modeling modules
-│   │       ├── task4_runner.py         # Pipeline orchestrator
-│   │       ├── data_preparation.py     # Full preprocessing (508 lines)
-│   │       ├── models.py              # 5-algorithm training suite (636 lines)
-│   │       ├── interpretability.py    # SHAP and LIME analysis
-│   │       └── reporting.py           # Model comparison reports
-│   │
-│   └── utils/
-│       ├── config.py                   # YAML config with dot-notation access
-│       └── logger.py                   # Loguru-based structured logging
-│
-├── scripts/
-│   ├── run_pipeline.py                 # End-to-end pipeline (load → train → select → justify)
-│   ├── run_task3.py                    # Task 3 statistical testing entry point
-│   ├── run_task4.py                    # Task 4 predictive modeling entry point
-│   └── check_dependencies.py          # Dependency verification utility
-│
-├── tests/
-│   ├── test_data.py                    # 6 tests: loading, missing values, features, encoding, pipeline
-│   ├── test_model_selector.py          # 5 tests: training, selection, ranking, edge cases
-│   ├── test_metrics.py                 # 6 tests: regression, classification, loss ratio
-│   ├── test_justification.py           # 4 tests: JSON structure, rounding, persistence
-│   ├── conftest.py                     # Shared fixtures (synthetic DataFrame, CSV path)
-│   └── fixtures/
-│       └── sample_insurance_data.csv   # 12-row synthetic dataset (no DVC needed)
-│
-├── results/
-│   └── decision_summary.json           # Auto-generated decision artifact
-│
-├── config/
-│   └── config.yaml                     # Centralized configuration (paths, hyperparameters, alpha)
-│
-├── data/
-│   └── raw/
-│       └── MachineLearningRating_v3.txt.dvc  # DVC pointer to 529 MB production dataset
-│
-├── docs/
-│   ├── task3/README.md                 # Detailed Task 3 documentation
-│   └── task4/README.md                 # Detailed Task 4 documentation
-│
-├── requirements/
-│   ├── base.txt                        # Core: numpy, pandas, scikit-learn, xgboost, shap, lime, dvc
-│   ├── dev.txt                         # Dev: pytest, black, flake8, mypy, pre-commit
-│   └── prod.txt                        # Production dependencies
-│
-└── pyproject.toml                      # Build config, tool settings (black, isort, mypy, pytest)
-```
-
-### Design Principles
-
-- **Type hints and docstrings** on every public function
-- **Named constants** -- no magic numbers (e.g., `DEFAULT_RANDOM_STATE = 42`, `DEFAULT_TEST_SIZE = 0.3`)
-- **Separation of concerns** -- data, models, evaluation, and decision layers are independently testable
-- **Dependency injection** -- `load_insurance_data(file_path=...)` lets tests inject synthetic data without touching production files
-- **Fail-fast CI** -- no `continue-on-error` in the test job; a broken test blocks the pipeline
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Python 3.9+
-- Git
-- pip
-
-### Installation
+## Quick Start
 
 ```bash
 git clone https://github.com/GebSenait/Predictive-Insurance-Risk-Analysis.git
 cd Predictive-Insurance-Risk-Analysis
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+# Windows: venv\Scripts\activate   |   Unix: source venv/bin/activate
 pip install -r requirements/base.txt
 pip install -r requirements/dev.txt
 ```
 
-### Running Tests (no DVC data needed)
+Run tests (no data download):
 
 ```bash
 pytest tests/ -v
 ```
 
-### Running the Analysis
+Run the pipeline (after `dvc pull` for full data, or use the included sample data with `use_sample_data: true` in config):
 
 ```bash
-# Pull production data (529 MB, one-time)
-dvc pull
-
-# Run statistical hypothesis testing
-python scripts/run_task3.py
-
-# Run predictive modeling (claim severity, premium, claim probability)
-python scripts/run_task4.py
-
-# Run the unified pipeline (train → select → decision JSON)
 python scripts/run_pipeline.py
+python scripts/run_task3.py
+python scripts/run_task4.py
+python src/evaluation/benchmark_summary.py
 ```
 
-### Output Files
+## Technical Details
 
-| Script | Output | Description |
-|--------|--------|-------------|
-| `run_task3.py` | `results/task3_results.json` | Complete hypothesis test results |
-| | `results/reports/task3_statistical_report.md` | Business-ready markdown report |
-| | `results/figures/hypothesis_test_summary.png` | P-value visualization |
-| `run_task4.py` | `results/task4/task4_results.json` | All model metrics |
-| | `results/reports/task4_modeling_report.md` | Model comparison report |
-| | `results/task4/task4_top_features.json` | SHAP/LIME feature rankings |
-| `run_pipeline.py` | `results/decision_summary.json` | Automated decision justification |
+- **Data:** Production: `data/raw/MachineLearningRating_v3.txt` (DVC, ~529 MB). Sample: `MachineLearningRating_sample.txt` (12k rows, same schema) for local/CI. Tests use `tests/fixtures/sample_insurance_data.csv` or in-memory DataFrames.
+- **Models:** Task 4: Linear Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost (regression and classification). Best model by test R² (regression) or F1 (classification). Hyperparameters in `config/config.yaml` (e.g. `random_state: 42`, `test_size: 0.3`).
+- **Evaluation:** RMSE, R², accuracy, precision, recall, F1, loss ratio. Decision logic and benchmark summary in `src/decision/` and `src/evaluation/`.
 
----
+More: [docs/task3/README.md](docs/task3/README.md) · [docs/task4/README.md](docs/task4/README.md) · [docs/task2/README.md](docs/task2/README.md)
 
-## Data Strategy
+## Future Improvements
 
-| Context | Data Source | Size | Notes |
-|---------|------------|------|-------|
-| **Production** | `data/raw/MachineLearningRating_v3.txt` | ~529 MB | DVC-tracked; requires `dvc pull` |
-| **Testing** | `tests/fixtures/sample_insurance_data.csv` | 12 rows | Synthetic; always available, zero DVC dependency |
+With more time, next steps would be:
 
-### Data Version Control (DVC)
+- REST API scoring endpoint for real-time quotes
+- Drift detection on inputs and targets
+- Scheduled retraining (e.g. quarterly)
+- Docker containerization for deployment
 
-This project uses DVC to ensure full reproducibility and auditability for financial/insurance regulatory compliance.
+The current design (modular pipeline, config-driven, lock file, traceability) supports these extensions without a rewrite.
 
-```bash
-# Pull tracked data
-dvc pull
+## Lessons Learned
 
-# Check data status
-dvc status
+- One artifact that explains the decision (the decision JSON) reduced "why this model?" questions and aligned DS with business.
+- DVC + fixed seed + config made re-runs and audits straightforward; the lock file and reproducibility test lock the environment and seed.
+- Unifying Task 3 and Task 4 around shared data and evaluation reduced duplication and ensured metric consistency.
+- Sample dataset (same schema as production) enabled CI and development without requiring the full 529 MB file.
 
-# Recover a historical data version
-git checkout <commit-hash> data/raw/MachineLearningRating_v3.txt.dvc
-dvc checkout data/raw/MachineLearningRating_v3.txt.dvc
-```
+## Author
 
-- **Remote storage:** `dvc-storage/` (local directory)
-- **Configuration:** `.dvc/config`
-- All data files are tracked via `.dvc` metadata committed to Git, while actual data resides in the remote store.
+**Senait Gebreab** — Data Science & ML Test Engineer  
+Repository: [https://github.com/GebSenait/Predictive-Insurance-Risk-Analysis](https://github.com/GebSenait/Predictive-Insurance-Risk-Analysis)
 
-For detailed DVC documentation, see [docs/task2/README.md](docs/task2/README.md).
+## License & Contributing
 
----
-
-## Test Results and Evidence
-
-**31 unit tests** pass in under 11 seconds using only synthetic data (executed inside Python venv):
-
-```
-tests/test_data.py::TestLoadInsuranceData::test_load_fixture_csv           PASSED
-tests/test_data.py::TestLoadInsuranceData::test_load_missing_file_raises   PASSED
-tests/test_data.py::TestPreprocessing::test_handle_missing_values          PASSED
-tests/test_data.py::TestPreprocessing::test_engineer_features_adds_columns PASSED
-tests/test_data.py::TestPreprocessing::test_encode_categoricals            PASSED
-tests/test_data.py::TestPreprocessing::test_run_preprocessing_pipeline     PASSED
-tests/test_model_selector.py::TestModelTraining::test_regression_models    PASSED
-tests/test_model_selector.py::TestModelTraining::test_classification_models PASSED
-tests/test_model_selector.py::TestModelSelector::test_select_best_regression PASSED
-tests/test_model_selector.py::TestModelSelector::test_select_raises_on_empty PASSED
-tests/test_model_selector.py::TestModelSelector::test_get_ranking_sorted   PASSED
-tests/test_metrics.py::TestRegressionMetrics::test_perfect_predictions     PASSED
-tests/test_metrics.py::TestRegressionMetrics::test_rmse_positive           PASSED
-tests/test_metrics.py::TestClassificationMetrics::test_perfect_classification PASSED
-tests/test_metrics.py::TestClassificationMetrics::test_zero_division_handled PASSED
-tests/test_metrics.py::TestLossRatio::test_basic_ratio                     PASSED
-tests/test_metrics.py::TestLossRatio::test_zero_premium_safe               PASSED
-tests/test_justification.py::TestBuildDecisionSummary::test_required_keys  PASSED
-tests/test_justification.py::TestBuildDecisionSummary::test_metric_rounded PASSED
-tests/test_justification.py::TestBuildDecisionSummary::test_business_impact PASSED
-tests/test_justification.py::TestSaveDecisionSummary::test_json_written    PASSED
-tests/unit/test_config.py::test_load_config_success                        PASSED
-tests/unit/test_config.py::test_load_config_file_not_found                 PASSED
-tests/unit/test_config.py::test_get_config                                 PASSED
-tests/unit/test_loaders.py::test_dataloader_init                           PASSED
-tests/unit/test_loaders.py::test_load_csv_success                          PASSED
-tests/unit/test_loaders.py::test_load_csv_file_not_found                   PASSED
-tests/unit/test_validators.py::test_validate_schema_success                PASSED
-tests/unit/test_validators.py::test_validate_schema_missing_column         PASSED
-tests/unit/test_validators.py::test_check_missing_values_no_missing        PASSED
-tests/unit/test_validators.py::test_check_duplicates_no_duplicates         PASSED
-
-======================== 31 passed in 10.57s ========================
-```
-
-| Test File | Tests | What It Validates |
-|-----------|-------|-------------------|
-| `test_data.py` | 6 | CSV loading from fixture, FileNotFoundError, missing-value handling, feature engineering (HasClaim, LossRatio, ProfitMargin), categorical encoding, full preprocessing pipeline split |
-| `test_model_selector.py` | 5 | Regression training returns valid metrics, classification training returns valid metrics, best-model selection picks highest R-squared, empty-input raises ValueError, ranking is sorted descending |
-| `test_metrics.py` | 6 | Perfect regression gives RMSE=0/R-squared=1, RMSE is non-negative, perfect classification gives all metrics=1, zero-division is handled safely, loss ratio basic computation, zero-premium returns 0 |
-| `test_justification.py` | 4 | Decision JSON contains all required keys, metric score is rounded to 6 decimals, business impact is non-empty string, JSON is written to disk and parseable |
-| `unit/test_config.py` | 3 | YAML config loading, FileNotFoundError for missing config, dot-notation config access |
-| `unit/test_loaders.py` | 3 | DataLoader class initialisation, CSV load success, FileNotFoundError for missing CSV |
-| `unit/test_validators.py` | 4 | Schema validation success, missing column detection, missing value check, duplicate row check |
-
-**Test isolation guarantee:** No test imports from `data/raw/`, references DVC, or requires network access. All data is either a 12-row synthetic CSV or an in-memory DataFrame created at test time.
-
----
-
-## CI/CD Pipeline
-
-The GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push to `task-dev` and on pull requests to `main`:
-
-- **Matrix testing:** Python 3.9, 3.10, 3.11
-- **Strict failure mode:** No `continue-on-error` -- any test failure blocks the pipeline
-- **Dependency caching:** pip cache for faster re-runs
-- **Scope:** Runs all 31 tests across `tests/` (pipeline tests + legacy unit tests)
-
----
-
-## Development Workflow
-
-### Branch Discipline
-
-| Branch | Purpose |
-|--------|---------|
-| `main` | Protected; stable, reviewed releases only |
-| `task-dev` | Active development; CI runs on every push |
-
-### Commit Convention
-
-This project follows [Conventional Commits](https://www.conventionalcommits.org/):
-
-```
-<type>: <description>
-```
-
-| Type | Usage |
-|------|-------|
-| `feat` | New feature or capability |
-| `fix` | Bug fix |
-| `refactor` | Code restructuring without behavior change |
-| `test` | Adding or updating tests |
-| `ci` | CI/CD configuration changes |
-| `docs` | Documentation updates |
-
-### Commit History (task-dev)
-
-```
-c341201 docs: add CI badge and interim updates
-43b6431 ci: add github actions pipeline
-f5a7d68 test: add unit tests for core modules
-3b737ff feat: add automated decision justification summary
-48e84c8 refactor: clean modular architecture and type hints
-```
-
-### Code Quality Tools
-
-| Tool | Purpose | Configuration |
-|------|---------|---------------|
-| `black` | Code formatting (line length 88) | `pyproject.toml` |
-| `flake8` | Linting | `pyproject.toml` |
-| `mypy` | Static type checking | `pyproject.toml` |
-| `isort` | Import sorting (black-compatible) | `pyproject.toml` |
-| `pytest` | Testing framework | `pyproject.toml` |
-| `pre-commit` | Git hook automation | `.pre-commit-config.yaml` |
-
----
-
-## Configuration
-
-All parameters are centralized in `config/config.yaml`:
-
-```yaml
-data:
-  raw_path: "data/raw"
-
-analysis:
-  task3:
-    alpha: 0.05
-    min_samples_province: 1000
-  task4:
-    random_state: 42
-    test_size: 0.3
-    n_estimators: 100
-    max_depth: 10
-    learning_rate: 0.1
-
-output:
-  results_path: "results"
-```
-
----
-
-## Detailed Task Documentation
-
-- **Task 3 (Hypothesis Testing):** [docs/task3/README.md](docs/task3/README.md)
-- **Task 4 (Predictive Modeling):** [docs/task4/README.md](docs/task4/README.md)
-
----
-
-## License
-
-See [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting pull requests.
+- **License:** [LICENSE](LICENSE)
+- **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md)

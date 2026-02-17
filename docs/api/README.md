@@ -1,38 +1,19 @@
-# API Documentation
+# API Reference
 
-## Overview
+Module-level API documentation for the Predictive Insurance Risk Analysis codebase.
 
-This directory contains API documentation for all modules in the Predictive Insurance Risk Analysis project.
+## Where to Look
 
-## Modules
+- **Source docstrings:** All public functions and classes in `src/` include type hints and docstrings. Use `help(module)` or your IDE’s hover in the repo.
+- **Task-specific docs:**  
+  - [Task 3 (Hypothesis Testing)](../task3/README.md)  
+  - [Task 4 (Predictive Modeling)](../task4/README.md)  
+  - [Task 2 (DVC & Reproducibility)](../task2/README.md)
+- **Key modules:**  
+  - `src/data/` — loaders, preprocessing, validators  
+  - `src/models/` — trainer, selector  
+  - `src/evaluation/` — metrics, benchmark_summary  
+  - `src/decision/` — justification  
+  - `src/utils/` — config, logger  
 
-### Data Layer
-
-- **[Data Loading API](data.md)**: DataLoader class and methods
-- **[Data Validation API](validation.md)**: DataValidator class and methods
-
-### Utilities
-
-- **[Configuration API](config.md)**: Configuration management
-- **[Logging API](logging.md)**: Logging utilities
-
-### Analysis
-
-- **[Analysis API](analysis.md)**: Analysis modules and functions
-
-## Documentation Standards
-
-All API documentation should include:
-- Function/class signatures
-- Parameter descriptions
-- Return value descriptions
-- Usage examples
-- Error handling
-
-## Generating Documentation
-
-API documentation is maintained manually but can be generated using tools like:
-- Sphinx
-- pydoc
-- MkDocs
-
+No separate API docs are generated; the codebase is the source of truth.

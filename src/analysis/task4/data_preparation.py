@@ -77,7 +77,9 @@ class DataPreprocessor:
         # Count missing values
         missing_counts = df.isnull().sum()
         if missing_counts.sum() > 0:
-            self.logger.info(f"Missing values found:\n{missing_counts[missing_counts > 0]}")
+            self.logger.info(
+                f"Missing values found:\n{missing_counts[missing_counts > 0]}"
+            )
 
         # Handle missing values based on strategy
         for col in df.columns:
@@ -89,7 +91,10 @@ class DataPreprocessor:
                 elif strategy == "mean" and df[col].dtype in ["int64", "float64"]:
                     df[col].fillna(df[col].mean(), inplace=True)
                 elif strategy == "mode":
-                    df[col].fillna(df[col].mode()[0] if len(df[col].mode()) > 0 else 0, inplace=True)
+                    df[col].fillna(
+                        df[col].mode()[0] if len(df[col].mode()) > 0 else 0,
+                        inplace=True,
+                    )
                 else:
                     # For categorical or other types, use mode or 'Unknown'
                     if df[col].dtype == "object":
@@ -126,9 +131,7 @@ class DataPreprocessor:
             )
 
             # Claim severity (only for policies with claims)
-            df["ClaimSeverity"] = np.where(
-                df["HasClaim"] == 1, df["TotalClaims"], 0
-            )
+            df["ClaimSeverity"] = np.where(df["HasClaim"] == 1, df["TotalClaims"], 0)
 
             # Profit margin
             df["ProfitMargin"] = df["TotalPremium"] - df["TotalClaims"]
@@ -193,7 +196,9 @@ class DataPreprocessor:
                 # Label encoding
                 if col not in self.label_encoders:
                     self.label_encoders[col] = LabelEncoder()
-                    df[col] = self.label_encoders[col].fit_transform(df[col].astype(str))
+                    df[col] = self.label_encoders[col].fit_transform(
+                        df[col].astype(str)
+                    )
                 else:
                     # Handle unseen categories
                     unique_values = set(df[col].astype(str).unique())
@@ -221,27 +226,28 @@ class DataPreprocessor:
                         )
 
                     # Create column names
-                    feature_names = [f"{col}_{cat}" for cat in self.onehot_encoders[col].categories_[0]]
-                    
+                    feature_names = [
+                        f"{col}_{cat}"
+                        for cat in self.onehot_encoders[col].categories_[0]
+                    ]
+
                     # Ensure encoded is a numpy array and convert to float if needed
                     if not isinstance(encoded, np.ndarray):
                         encoded = np.array(encoded)
                     encoded = encoded.astype(float)
-                    
+
                     # Create DataFrame with proper index alignment
                     encoded_df = pd.DataFrame(
-                        encoded, 
-                        columns=feature_names, 
-                        index=df.index
+                        encoded, columns=feature_names, index=df.index
                     )
 
                     # Drop original column first
                     df = df.drop(columns=[col], errors="ignore")
-                    
+
                     # Use assign method for safer concatenation (avoids numpy vstack issues)
                     for feat_col in feature_names:
                         df[feat_col] = encoded_df[feat_col]
-                    
+
                 except Exception as e:
                     self.logger.warning(
                         f"Error encoding column {col} with one-hot: {e}. "
@@ -254,7 +260,9 @@ class DataPreprocessor:
                             df[col].astype(str).fillna("Unknown")
                         )
                     else:
-                        unique_values = set(df[col].astype(str).fillna("Unknown").unique())
+                        unique_values = set(
+                            df[col].astype(str).fillna("Unknown").unique()
+                        )
                         known_values = set(self.label_encoders[col].classes_)
                         for val in unique_values - known_values:
                             self.label_encoders[col].classes_ = np.append(
@@ -300,13 +308,17 @@ class DataPreprocessor:
         feature_cols = [col for col in severity_df.columns if col not in exclude_cols]
 
         # Select only numeric features for severity model
-        numeric_features = severity_df[feature_cols].select_dtypes(
-            include=[np.number]
-        ).columns.tolist()
+        numeric_features = (
+            severity_df[feature_cols]
+            .select_dtypes(include=[np.number])
+            .columns.tolist()
+        )
 
         features = severity_df[numeric_features].copy()
 
-        self.logger.info(f"Severity model: {len(features.columns)} features, {len(features)} samples")
+        self.logger.info(
+            f"Severity model: {len(features.columns)} features, {len(features)} samples"
+        )
         return features, target, numeric_features
 
     def prepare_premium_data(
@@ -338,11 +350,15 @@ class DataPreprocessor:
         feature_cols = [col for col in df.columns if col not in exclude_cols]
 
         # Select only numeric features
-        numeric_features = df[feature_cols].select_dtypes(include=[np.number]).columns.tolist()
+        numeric_features = (
+            df[feature_cols].select_dtypes(include=[np.number]).columns.tolist()
+        )
 
         features = df[numeric_features].copy()
 
-        self.logger.info(f"Premium model: {len(features.columns)} features, {len(features)} samples")
+        self.logger.info(
+            f"Premium model: {len(features.columns)} features, {len(features)} samples"
+        )
         return features, target, numeric_features
 
     def prepare_claim_probability_data(
@@ -377,7 +393,9 @@ class DataPreprocessor:
         feature_cols = [col for col in df.columns if col not in exclude_cols]
 
         # Select only numeric features
-        numeric_features = df[feature_cols].select_dtypes(include=[np.number]).columns.tolist()
+        numeric_features = (
+            df[feature_cols].select_dtypes(include=[np.number]).columns.tolist()
+        )
 
         features = df[numeric_features].copy()
 
@@ -401,9 +419,15 @@ class DataPreprocessor:
         Returns:
             Tuple of (X_train, X_test, y_train, y_test)
         """
-        self.logger.info(f"Splitting data: {1-self.test_size:.0%} train, {self.test_size:.0%} test")
+        self.logger.info(
+            f"Splitting data: {1-self.test_size:.0%} train, {self.test_size:.0%} test"
+        )
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=self.test_size, random_state=self.random_state, stratify=None
+            X,
+            y,
+            test_size=self.test_size,
+            random_state=self.random_state,
+            stratify=None,
         )
         self.logger.info(f"Train: {len(X_train)} samples, Test: {len(X_test)} samples")
         return X_train, X_test, y_train, y_test
@@ -486,12 +510,16 @@ class DataPreprocessor:
 
         # 2. Premium model
         X_prem, y_prem, feature_names_prem = self.prepare_premium_data(df)
-        X_prem_train, X_prem_test, y_prem_train, y_prem_test = self.split_data(X_prem, y_prem)
+        X_prem_train, X_prem_test, y_prem_train, y_prem_test = self.split_data(
+            X_prem, y_prem
+        )
         datasets["premium"] = (X_prem_train, X_prem_test, y_prem_train, y_prem_test)
 
         # 3. Claim probability model
         X_prob, y_prob, feature_names_prob = self.prepare_claim_probability_data(df)
-        X_prob_train, X_prob_test, y_prob_train, y_prob_test = self.split_data(X_prob, y_prob)
+        X_prob_train, X_prob_test, y_prob_train, y_prob_test = self.split_data(
+            X_prob, y_prob
+        )
         datasets["claim_probability"] = (
             X_prob_train,
             X_prob_test,
@@ -504,4 +532,3 @@ class DataPreprocessor:
         self.logger.info("=" * 80)
 
         return datasets
-

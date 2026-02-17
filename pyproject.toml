@@ -15,8 +15,8 @@ packages = [
 
 [project]
 name = "predictive-insurance-risk-analysis"
-version = "0.1.0"
-description = "Predictive Insurance Risk Analysis - Task 1 Implementation"
+version = "1.0.0"
+description = "Predictive Insurance Risk Analysis - Production Release"
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}

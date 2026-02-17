@@ -38,16 +38,20 @@ pre-commit install
 
 ## Running the Solution
 
-### Run Main Analysis Script
+### Run the Pipeline
 
 ```bash
-python scripts/run_analysis.py
+# Full pipeline (requires data: dvc pull or use sample data)
+python scripts/run_pipeline.py
+
+# Task 3: hypothesis testing
+python scripts/run_task3.py
+
+# Task 4: predictive modeling (uses sample data if config has use_sample_data: true)
+python scripts/run_task4.py
 ```
 
-This will:
-- Load configuration from `config/config.yaml`
-- Set up logging
-- Execute Task 1 analysis (once implemented)
+These load configuration from `config/config.yaml` and use the paths and settings defined there.
 
 ### Run with Custom Configuration
 
@@ -106,7 +110,6 @@ mypy src --ignore-missing-imports
 
 1. **Make Changes**
    ```bash
-   # You're on develop branch
    git status  # Check current status
    ```
 
@@ -115,8 +118,8 @@ mypy src --ignore-missing-imports
    # Run tests
    pytest
    
-   # Run the main script
-   python scripts/run_analysis.py
+   # Run the pipeline or task scripts
+   python scripts/run_pipeline.py
    
    # Check code quality
    black --check .
@@ -193,20 +196,6 @@ ls config/config.yaml
 # Or create it from template
 cp config/config.yaml.example config/config.yaml
 ```
-
-## Running Jupyter Notebooks
-
-If you're using notebooks for exploration:
-
-```bash
-# Start Jupyter Lab
-jupyter lab
-
-# Or Jupyter Notebook
-jupyter notebook
-```
-
-Navigate to `notebooks/exploratory/` to create your analysis notebooks.
 
 ## Debugging
 

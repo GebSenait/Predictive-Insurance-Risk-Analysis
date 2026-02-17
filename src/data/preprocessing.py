@@ -140,9 +140,7 @@ def split_data(
     Returns:
         (X_train, X_test, y_train, y_test)
     """
-    return train_test_split(
-        X, y, test_size=test_size, random_state=random_state
-    )
+    return train_test_split(X, y, test_size=test_size, random_state=random_state)
 
 
 def run_preprocessing_pipeline(

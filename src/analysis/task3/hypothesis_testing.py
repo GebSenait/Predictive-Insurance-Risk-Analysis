@@ -94,12 +94,18 @@ class HypothesisTestingRunner:
             freq_a, freq_b, metric_type="categorical"
         )
         # Add loss ratio for context
-        loss_ratio_a = self.metric_calculator.calculate_loss_ratio(group_a, group_col=None).mean()
-        loss_ratio_b = self.metric_calculator.calculate_loss_ratio(group_b, group_col=None).mean()
+        loss_ratio_a = self.metric_calculator.calculate_loss_ratio(
+            group_a, group_col=None
+        ).mean()
+        loss_ratio_b = self.metric_calculator.calculate_loss_ratio(
+            group_b, group_col=None
+        ).mean()
         freq_test["loss_ratio_a"] = loss_ratio_a
         freq_test["loss_ratio_b"] = loss_ratio_b
         if not pd.isna(loss_ratio_a) and not pd.isna(loss_ratio_b) and loss_ratio_a > 0:
-            freq_test["loss_ratio_diff_pct"] = ((loss_ratio_b - loss_ratio_a) / loss_ratio_a) * 100
+            freq_test["loss_ratio_diff_pct"] = (
+                (loss_ratio_b - loss_ratio_a) / loss_ratio_a
+            ) * 100
         results["tests"]["claim_frequency"] = freq_test
 
         # Test Claim Severity (only for policies with claims)
@@ -148,12 +154,18 @@ class HypothesisTestingRunner:
             freq_a, freq_b, metric_type="categorical"
         )
         # Add loss ratio for context
-        loss_ratio_a = self.metric_calculator.calculate_loss_ratio(group_a, group_col=None).mean()
-        loss_ratio_b = self.metric_calculator.calculate_loss_ratio(group_b, group_col=None).mean()
+        loss_ratio_a = self.metric_calculator.calculate_loss_ratio(
+            group_a, group_col=None
+        ).mean()
+        loss_ratio_b = self.metric_calculator.calculate_loss_ratio(
+            group_b, group_col=None
+        ).mean()
         freq_test["loss_ratio_a"] = loss_ratio_a
         freq_test["loss_ratio_b"] = loss_ratio_b
         if not pd.isna(loss_ratio_a) and not pd.isna(loss_ratio_b) and loss_ratio_a > 0:
-            freq_test["loss_ratio_diff_pct"] = ((loss_ratio_b - loss_ratio_a) / loss_ratio_a) * 100
+            freq_test["loss_ratio_diff_pct"] = (
+                (loss_ratio_b - loss_ratio_a) / loss_ratio_a
+            ) * 100
         results["tests"]["claim_frequency"] = freq_test
 
         # Test Claim Severity
@@ -178,7 +190,9 @@ class HypothesisTestingRunner:
             Dictionary with test results
         """
         self.logger.info("=" * 80)
-        self.logger.info("HYPOTHESIS 3: No significant margin difference between zip codes")
+        self.logger.info(
+            "HYPOTHESIS 3: No significant margin difference between zip codes"
+        )
         self.logger.info("=" * 80)
 
         # Create zip code groups
@@ -238,12 +252,18 @@ class HypothesisTestingRunner:
             freq_a, freq_b, metric_type="categorical"
         )
         # Add loss ratio for context
-        loss_ratio_a = self.metric_calculator.calculate_loss_ratio(group_a, group_col=None).mean()
-        loss_ratio_b = self.metric_calculator.calculate_loss_ratio(group_b, group_col=None).mean()
+        loss_ratio_a = self.metric_calculator.calculate_loss_ratio(
+            group_a, group_col=None
+        ).mean()
+        loss_ratio_b = self.metric_calculator.calculate_loss_ratio(
+            group_b, group_col=None
+        ).mean()
         freq_test["loss_ratio_a"] = loss_ratio_a
         freq_test["loss_ratio_b"] = loss_ratio_b
         if not pd.isna(loss_ratio_a) and not pd.isna(loss_ratio_b) and loss_ratio_a > 0:
-            freq_test["loss_ratio_diff_pct"] = ((loss_ratio_b - loss_ratio_a) / loss_ratio_a) * 100
+            freq_test["loss_ratio_diff_pct"] = (
+                (loss_ratio_b - loss_ratio_a) / loss_ratio_a
+            ) * 100
         results["tests"]["claim_frequency"] = freq_test
 
         # Test Claim Severity
@@ -331,4 +351,3 @@ if __name__ == "__main__":
     runner = HypothesisTestingRunner()
     results = runner.run_all_tests()
     runner.save_results(results)
-
