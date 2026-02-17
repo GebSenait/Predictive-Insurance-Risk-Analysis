@@ -4,7 +4,11 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import GradientBoostingRegressor, RandomForestClassifier, RandomForestRegressor
+from sklearn.ensemble import (
+    GradientBoostingRegressor,
+    RandomForestClassifier,
+    RandomForestRegressor,
+)
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.metrics import (
     accuracy_score,
@@ -18,6 +22,7 @@ from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
 try:
     import xgboost as xgb
+
     XGBOOST_AVAILABLE = True
 except ImportError:
     XGBOOST_AVAILABLE = False
@@ -84,7 +89,9 @@ class ModelTrainer:
             "y_test_pred": y_test_pred,
         }
 
-        self.logger.info(f"Linear Regression - Test RMSE: {test_rmse:.2f}, Test R²: {test_r2:.4f}")
+        self.logger.info(
+            f"Linear Regression - Test RMSE: {test_rmse:.2f}, Test R²: {test_r2:.4f}"
+        )
         return results
 
     def train_decision_tree(
@@ -111,7 +118,7 @@ class ModelTrainer:
             Dictionary with model and evaluation metrics
         """
         self.logger.info(f"Training Decision Tree ({task_type})...")
-        
+
         if task_type == "regression":
             model = DecisionTreeRegressor(
                 max_depth=max_depth, random_state=self.random_state
@@ -134,7 +141,9 @@ class ModelTrainer:
                 "test_r2": test_r2,
                 "y_test_pred": y_test_pred,
             }
-            self.logger.info(f"Decision Tree - Test RMSE: {test_rmse:.2f}, Test R²: {test_r2:.4f}")
+            self.logger.info(
+                f"Decision Tree - Test RMSE: {test_rmse:.2f}, Test R²: {test_r2:.4f}"
+            )
 
         else:  # classification
             model = DecisionTreeClassifier(
@@ -146,8 +155,12 @@ class ModelTrainer:
 
             train_acc = accuracy_score(y_train, y_train_pred)
             test_acc = accuracy_score(y_test, y_test_pred)
-            test_precision = precision_score(y_test, y_test_pred, average="binary", zero_division=0)
-            test_recall = recall_score(y_test, y_test_pred, average="binary", zero_division=0)
+            test_precision = precision_score(
+                y_test, y_test_pred, average="binary", zero_division=0
+            )
+            test_recall = recall_score(
+                y_test, y_test_pred, average="binary", zero_division=0
+            )
             test_f1 = f1_score(y_test, y_test_pred, average="binary", zero_division=0)
 
             results = {
@@ -192,7 +205,7 @@ class ModelTrainer:
             Dictionary with model and evaluation metrics
         """
         self.logger.info(f"Training Random Forest ({task_type})...")
-        
+
         if task_type == "regression":
             model = RandomForestRegressor(
                 n_estimators=n_estimators,
@@ -218,7 +231,9 @@ class ModelTrainer:
                 "test_r2": test_r2,
                 "y_test_pred": y_test_pred,
             }
-            self.logger.info(f"Random Forest - Test RMSE: {test_rmse:.2f}, Test R²: {test_r2:.4f}")
+            self.logger.info(
+                f"Random Forest - Test RMSE: {test_rmse:.2f}, Test R²: {test_r2:.4f}"
+            )
 
         else:  # classification
             model = RandomForestClassifier(
@@ -233,8 +248,12 @@ class ModelTrainer:
 
             train_acc = accuracy_score(y_train, y_train_pred)
             test_acc = accuracy_score(y_test, y_test_pred)
-            test_precision = precision_score(y_test, y_test_pred, average="binary", zero_division=0)
-            test_recall = recall_score(y_test, y_test_pred, average="binary", zero_division=0)
+            test_precision = precision_score(
+                y_test, y_test_pred, average="binary", zero_division=0
+            )
+            test_recall = recall_score(
+                y_test, y_test_pred, average="binary", zero_division=0
+            )
             test_f1 = f1_score(y_test, y_test_pred, average="binary", zero_division=0)
 
             results = {
@@ -281,7 +300,7 @@ class ModelTrainer:
             Dictionary with model and evaluation metrics
         """
         self.logger.info(f"Training Gradient Boosting ({task_type})...")
-        
+
         if task_type == "regression":
             model = GradientBoostingRegressor(
                 n_estimators=n_estimators,
@@ -313,6 +332,7 @@ class ModelTrainer:
 
         else:  # classification
             from sklearn.ensemble import GradientBoostingClassifier
+
             model = GradientBoostingClassifier(
                 n_estimators=n_estimators,
                 learning_rate=learning_rate,
@@ -325,8 +345,12 @@ class ModelTrainer:
 
             train_acc = accuracy_score(y_train, y_train_pred)
             test_acc = accuracy_score(y_test, y_test_pred)
-            test_precision = precision_score(y_test, y_test_pred, average="binary", zero_division=0)
-            test_recall = recall_score(y_test, y_test_pred, average="binary", zero_division=0)
+            test_precision = precision_score(
+                y_test, y_test_pred, average="binary", zero_division=0
+            )
+            test_recall = recall_score(
+                y_test, y_test_pred, average="binary", zero_division=0
+            )
             test_f1 = f1_score(y_test, y_test_pred, average="binary", zero_division=0)
 
             results = {
@@ -377,7 +401,7 @@ class ModelTrainer:
             return None
 
         self.logger.info(f"Training XGBoost ({task_type})...")
-        
+
         if task_type == "regression":
             model = xgb.XGBRegressor(
                 n_estimators=n_estimators,
@@ -404,7 +428,9 @@ class ModelTrainer:
                 "test_r2": test_r2,
                 "y_test_pred": y_test_pred,
             }
-            self.logger.info(f"XGBoost - Test RMSE: {test_rmse:.2f}, Test R²: {test_r2:.4f}")
+            self.logger.info(
+                f"XGBoost - Test RMSE: {test_rmse:.2f}, Test R²: {test_r2:.4f}"
+            )
 
         else:  # classification
             model = xgb.XGBClassifier(
@@ -420,8 +446,12 @@ class ModelTrainer:
 
             train_acc = accuracy_score(y_train, y_train_pred)
             test_acc = accuracy_score(y_test, y_test_pred)
-            test_precision = precision_score(y_test, y_test_pred, average="binary", zero_division=0)
-            test_recall = recall_score(y_test, y_test_pred, average="binary", zero_division=0)
+            test_precision = precision_score(
+                y_test, y_test_pred, average="binary", zero_division=0
+            )
+            test_recall = recall_score(
+                y_test, y_test_pred, average="binary", zero_division=0
+            )
             test_f1 = f1_score(y_test, y_test_pred, average="binary", zero_division=0)
 
             results = {
@@ -460,7 +490,9 @@ class ModelTrainer:
             Dictionary with model and evaluation metrics
         """
         self.logger.info("Training Logistic Regression...")
-        model = LogisticRegression(random_state=self.random_state, max_iter=1000, n_jobs=-1)
+        model = LogisticRegression(
+            random_state=self.random_state, max_iter=1000, n_jobs=-1
+        )
         model.fit(X_train, y_train)
 
         y_train_pred = model.predict(X_train)
@@ -468,8 +500,12 @@ class ModelTrainer:
 
         train_acc = accuracy_score(y_train, y_train_pred)
         test_acc = accuracy_score(y_test, y_test_pred)
-        test_precision = precision_score(y_test, y_test_pred, average="binary", zero_division=0)
-        test_recall = recall_score(y_test, y_test_pred, average="binary", zero_division=0)
+        test_precision = precision_score(
+            y_test, y_test_pred, average="binary", zero_division=0
+        )
+        test_recall = recall_score(
+            y_test, y_test_pred, average="binary", zero_division=0
+        )
         test_f1 = f1_score(y_test, y_test_pred, average="binary", zero_division=0)
 
         results = {
@@ -514,7 +550,9 @@ class ModelTrainer:
         results = {}
 
         # Linear Regression
-        results["linear"] = self.train_linear_regression(X_train, y_train, X_test, y_test)
+        results["linear"] = self.train_linear_regression(
+            X_train, y_train, X_test, y_test
+        )
 
         # Decision Tree
         results["decision_tree"] = self.train_decision_tree(
@@ -567,7 +605,9 @@ class ModelTrainer:
         results = {}
 
         # Logistic Regression
-        results["logistic"] = self.train_logistic_regression(X_train, y_train, X_test, y_test)
+        results["logistic"] = self.train_logistic_regression(
+            X_train, y_train, X_test, y_test
+        )
 
         # Decision Tree
         results["decision_tree"] = self.train_decision_tree(
@@ -594,7 +634,9 @@ class ModelTrainer:
 
         return results
 
-    def get_best_model(self, results: Dict[str, Dict], metric: str = "test_r2") -> Tuple[str, Dict]:
+    def get_best_model(
+        self, results: Dict[str, Dict], metric: str = "test_r2"
+    ) -> Tuple[str, Dict]:
         """
         Get the best model based on a metric.
 
@@ -630,6 +672,7 @@ class ModelTrainer:
             )
             return best_model_name, results[best_model_name]
         else:
-            self.logger.warning(f"Could not determine best model using metric: {metric}")
+            self.logger.warning(
+                f"Could not determine best model using metric: {metric}"
+            )
             return None, None
-

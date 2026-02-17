@@ -1,8 +1,9 @@
 """Unit tests for data loaders."""
 
+from pathlib import Path
+
 import pandas as pd
 import pytest
-from pathlib import Path
 
 from src.data.loaders import DataLoader
 
@@ -29,4 +30,3 @@ def test_load_csv_file_not_found():
     loader = DataLoader()
     with pytest.raises(FileNotFoundError):
         loader.load_csv("nonexistent_file.csv")
-

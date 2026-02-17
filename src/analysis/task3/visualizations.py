@@ -217,7 +217,12 @@ class VisualizationGenerator:
             table[(0, i)].set_facecolor("#4CAF50")
             table[(0, i)].set_text_props(weight="bold", color="white")
 
-        plt.title(f"{metric_name} - Summary Statistics", fontsize=14, fontweight="bold", pad=20)
+        plt.title(
+            f"{metric_name} - Summary Statistics",
+            fontsize=14,
+            fontweight="bold",
+            pad=20,
+        )
         plt.tight_layout()
 
         output_file = self.output_path / filename
@@ -225,4 +230,3 @@ class VisualizationGenerator:
         plt.close()
 
         self.logger.info(f"Saved statistics table to {output_file}")
-

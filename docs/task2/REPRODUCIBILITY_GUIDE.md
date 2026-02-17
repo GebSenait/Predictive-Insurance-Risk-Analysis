@@ -72,7 +72,7 @@ dvc --version
 
 ```bash
 # Run the main analysis script
-python scripts/run_analysis.py
+python scripts/run_pipeline.py
 
 # Or run specific analysis modules
 python -m src.analysis.<module>
@@ -102,7 +102,7 @@ git checkout <commit-hash> data/raw/MachineLearningRating_v3.txt.dvc
 dvc checkout data/raw/MachineLearningRating_v3.txt.dvc
 
 # Run analysis
-python scripts/run_analysis.py
+python scripts/run_pipeline.py
 
 # Compare results
 ```
@@ -139,7 +139,7 @@ git checkout <commit-hash>
 dvc pull
 
 # Run analysis
-python scripts/run_analysis.py
+python scripts/run_pipeline.py
 ```
 
 ## Troubleshooting Reproduction Issues
@@ -272,7 +272,7 @@ dvc pull
 dvc status
 
 # Run analysis
-python scripts/run_analysis.py
+python scripts/run_pipeline.py
 
 echo "Reproduction complete!"
 ```
@@ -299,7 +299,7 @@ dvc pull
 dvc status
 
 # Run analysis
-python scripts/run_analysis.py
+python scripts/run_pipeline.py
 
 Write-Host "Reproduction complete!"
 ```

@@ -27,6 +27,7 @@ FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
 # Fixtures for NEW pipeline tests (test_data, test_model_selector, etc.)
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def sample_csv_path() -> Path:
     """Path to the small synthetic fixture CSV (12 rows)."""
@@ -49,6 +50,7 @@ def sample_dataframe() -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Fixtures for LEGACY unit tests (tests/unit/)
 # ---------------------------------------------------------------------------
+
 
 @pytest.fixture
 def temp_dir():

@@ -172,9 +172,7 @@ class StatisticalTester:
 
         return result
 
-    def chi_square_test(
-        self, group_a: pd.Series, group_b: pd.Series
-    ) -> Dict:
+    def chi_square_test(self, group_a: pd.Series, group_b: pd.Series) -> Dict:
         """
         Perform chi-square test for categorical frequency differences.
 
@@ -188,7 +186,7 @@ class StatisticalTester:
         # Create contingency table: rows = groups, columns = claim status (0 vs 1)
         group_a_clean = group_a.dropna()
         group_b_clean = group_b.dropna()
-        
+
         # Count claims (1) and no claims (0) for each group
         contingency_data = {
             "Group A": [
@@ -282,4 +280,3 @@ class StatisticalTester:
                         "Data not normally distributed, using Mann-Whitney U test"
                     )
                     return self.mannwhitney_u_test(group_a, group_b)
-

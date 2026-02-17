@@ -1,0 +1,5 @@
+{
+    "severity_model": "linear",
+    "premium_model": "linear",
+    "claim_probability_model": "decision_tree"
+}

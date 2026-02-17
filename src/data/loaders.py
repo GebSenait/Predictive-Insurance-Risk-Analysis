@@ -13,7 +13,6 @@ from typing import Optional, Union
 
 import pandas as pd
 
-
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -25,6 +24,7 @@ DEFAULT_FILENAME: str = "MachineLearningRating_v3.txt"
 # ---------------------------------------------------------------------------
 # Function-based API (used by scripts/run_pipeline.py and new tests)
 # ---------------------------------------------------------------------------
+
 
 def load_insurance_data(
     file_path: Optional[Union[str, Path]] = None,
@@ -64,6 +64,7 @@ def load_insurance_data(
 # ---------------------------------------------------------------------------
 # Class-based API (used by src/analysis/task3, task4 and legacy tests)
 # ---------------------------------------------------------------------------
+
 
 class DataLoader:
     """Class for loading data from various sources.

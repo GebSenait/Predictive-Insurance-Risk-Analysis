@@ -6,7 +6,6 @@ from typing import Any, Dict, Optional
 import yaml
 from dotenv import load_dotenv
 
-
 # Global config storage
 _config: Optional[Dict[str, Any]] = None
 
@@ -75,4 +74,3 @@ def get_config(key: Optional[str] = None, default: Any = None) -> Any:
             return default
 
     return value
-

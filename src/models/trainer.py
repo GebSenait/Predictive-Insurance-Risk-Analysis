@@ -69,8 +69,12 @@ def _classification_metrics(
     """
     return {
         "accuracy": float(accuracy_score(y_true, y_pred)),
-        "precision": float(precision_score(y_true, y_pred, average="binary", zero_division=0)),
-        "recall": float(recall_score(y_true, y_pred, average="binary", zero_division=0)),
+        "precision": float(
+            precision_score(y_true, y_pred, average="binary", zero_division=0)
+        ),
+        "recall": float(
+            recall_score(y_true, y_pred, average="binary", zero_division=0)
+        ),
         "f1": float(f1_score(y_true, y_pred, average="binary", zero_division=0)),
     }
 
@@ -100,7 +104,9 @@ def _train_and_evaluate(
     y_train_pred = model.predict(X_train)
     y_test_pred = model.predict(X_test)
 
-    metric_fn = _regression_metrics if task_type == "regression" else _classification_metrics
+    metric_fn = (
+        _regression_metrics if task_type == "regression" else _classification_metrics
+    )
     train_metrics = metric_fn(y_train, y_train_pred)
     test_metrics = metric_fn(y_test, y_test_pred)
 
@@ -116,6 +122,7 @@ def _train_and_evaluate(
 # ------------------------------------------------------------------
 # Public API
 # ------------------------------------------------------------------
+
 
 def train_regression_models(
     X_train: pd.DataFrame,

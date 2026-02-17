@@ -57,4 +57,3 @@ def get_logger(name: str):
         Logger instance
     """
     return logger.bind(name=name)
-

@@ -181,7 +181,9 @@ class ReportGenerator:
             for test_name, test_result in result.get("tests", {}).items():
                 p_value = test_result.get("p_value", np.nan)
                 reject = test_result.get("reject_null", False)
-                conclusion = "Significant difference" if reject else "No significant difference"
+                conclusion = (
+                    "Significant difference" if reject else "No significant difference"
+                )
 
                 report_lines.append(
                     f"| H{i+1} | {test_name.replace('_', ' ').title()} | "
@@ -224,14 +226,18 @@ class ReportGenerator:
         loss_ratio_a = test_result.get("loss_ratio_a", np.nan)
         loss_ratio_b = test_result.get("loss_ratio_b", np.nan)
         loss_ratio_diff_pct = test_result.get("loss_ratio_diff_pct", np.nan)
-        
+
         interpretations = {
             (1, "claim_frequency"): (
                 f"We reject H₀ for claim frequency across provinces (p < {p_value:.3f}). "
                 f"{group_a_name} and {group_b_name} show statistically significant differences "
                 f"in claim frequency. "
-                + (f"{group_b_name} shows {abs(loss_ratio_diff_pct):.1f}% {'higher' if loss_ratio_diff_pct > 0 else 'lower'} loss ratio than {group_a_name} "
-                   f"({loss_ratio_b:.3f} vs {loss_ratio_a:.3f}). " if not pd.isna(loss_ratio_diff_pct) else "")
+                + (
+                    f"{group_b_name} shows {abs(loss_ratio_diff_pct):.1f}% {'higher' if loss_ratio_diff_pct > 0 else 'lower'} loss ratio than {group_a_name} "
+                    f"({loss_ratio_b:.3f} vs {loss_ratio_a:.3f}). "
+                    if not pd.isna(loss_ratio_diff_pct)
+                    else ""
+                )
                 + f"This suggests that regional risk factors vary by province, "
                 f"and ACIS should consider province-based premium adjustments in their pricing model."
             ),
@@ -245,8 +251,12 @@ class ReportGenerator:
             (2, "claim_frequency"): (
                 f"We reject H₀ for claim frequency between zip codes (p < {p_value:.3f}). "
                 f"Zip codes {group_a_name} and {group_b_name} exhibit different risk profiles. "
-                + (f"Zip code {group_b_name} shows {abs(loss_ratio_diff_pct):.1f}% {'higher' if loss_ratio_diff_pct > 0 else 'lower'} loss ratio than {group_a_name} "
-                   f"({loss_ratio_b:.3f} vs {loss_ratio_a:.3f}). " if not pd.isna(loss_ratio_diff_pct) else "")
+                + (
+                    f"Zip code {group_b_name} shows {abs(loss_ratio_diff_pct):.1f}% {'higher' if loss_ratio_diff_pct > 0 else 'lower'} loss ratio than {group_a_name} "
+                    f"({loss_ratio_b:.3f} vs {loss_ratio_a:.3f}). "
+                    if not pd.isna(loss_ratio_diff_pct)
+                    else ""
+                )
                 + f"This granular geographic segmentation can inform more precise pricing strategies "
                 f"and risk assessment at the local level."
             ),
@@ -268,8 +278,12 @@ class ReportGenerator:
                 f"We reject H₀ for claim frequency between genders (p < {p_value:.3f}). "
                 f"Statistically significant differences exist between {group_a_name} and "
                 f"{group_b_name} in terms of claim frequency. "
-                + (f"{group_b_name} shows {abs(loss_ratio_diff_pct):.1f}% {'higher' if loss_ratio_diff_pct > 0 else 'lower'} loss ratio than {group_a_name} "
-                   f"({loss_ratio_b:.3f} vs {loss_ratio_a:.3f}). " if not pd.isna(loss_ratio_diff_pct) else "")
+                + (
+                    f"{group_b_name} shows {abs(loss_ratio_diff_pct):.1f}% {'higher' if loss_ratio_diff_pct > 0 else 'lower'} loss ratio than {group_a_name} "
+                    f"({loss_ratio_b:.3f} vs {loss_ratio_a:.3f}). "
+                    if not pd.isna(loss_ratio_diff_pct)
+                    else ""
+                )
                 + f"However, note that gender-based pricing may be subject to regulatory restrictions. "
                 f"Consider this finding in conjunction with other risk factors and regulatory compliance requirements."
             ),
@@ -291,7 +305,9 @@ class ReportGenerator:
                 f"changes based on this finding."
             )
 
-    def save_results_table(self, results: List[Dict], filename: str = "task3_results_table.csv"):
+    def save_results_table(
+        self, results: List[Dict], filename: str = "task3_results_table.csv"
+    ):
         """
         Save results table to CSV.
 
@@ -303,4 +319,3 @@ class ReportGenerator:
         output_file = self.output_path / filename
         df.to_csv(output_file, index=False)
         self.logger.info(f"Results table saved to {output_file}")
-

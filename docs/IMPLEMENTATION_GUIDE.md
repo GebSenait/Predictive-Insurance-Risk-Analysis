@@ -154,9 +154,6 @@ predictive-insurance-risk-analysis/
 │   ├── guides/                      # User guides
 │   └── task1/                       # Task 1 specific docs
 │
-├── notebooks/                        # Jupyter notebooks
-│   └── exploratory/                 # Exploratory analysis
-│
 ├── requirements/                     # Python dependencies
 │   ├── base.txt                     # Core dependencies
 │   ├── dev.txt                      # Development dependencies
@@ -167,8 +164,10 @@ predictive-insurance-risk-analysis/
 │   └── reports/                     # Generated reports
 │
 ├── scripts/                          # Utility scripts
-│   ├── setup.py                     # Setup script
-│   └── run_analysis.py              # Main analysis script
+│   ├── setup.py                     # Directory setup from config
+│   ├── run_pipeline.py              # End-to-end pipeline (train → decision JSON)
+│   ├── run_task3.py                 # Task 3 hypothesis testing
+│   └── run_task4.py                 # Task 4 predictive modeling
 │
 ├── src/                              # Source code
 │   ├── data/                        # Data handling modules
@@ -198,7 +197,6 @@ predictive-insurance-risk-analysis/
 - **`config/`**: Centralized configuration files (YAML format)
 - **`data/`**: Data storage (typically gitignored, use .gitkeep for structure)
 - **`docs/`**: Comprehensive documentation organized by category
-- **`notebooks/`**: Jupyter notebooks for exploratory analysis
 - **`requirements/`**: Separated dependency files for different environments
 - **`results/`**: Output directory for analysis results
 - **`scripts/`**: Standalone utility scripts
@@ -502,7 +500,6 @@ flake8 src tests scripts
 #### Step 4: Implement Task 1
 - Review Task 1 specific requirements
 - Implement analysis modules in `src/analysis/task1/`
-- Create notebooks in `notebooks/exploratory/`
 - Generate visualizations and reports
 
 #### Step 5: Documentation

@@ -1,0 +1,282 @@
+{
+  "severity": {
+    "best_model_name": "linear",
+    "best_model_metrics": {
+      "model_name": "Linear Regression",
+      "train_rmse": 764.3518809923859,
+      "test_rmse": 764.5010085070761,
+      "train_r2": 0.0064475096533839205,
+      "test_r2": -0.004352109617144162
+    },
+    "all_models": {
+      "linear": {
+        "model_name": "Linear Regression",
+        "train_rmse": 764.3518809923859,
+        "test_rmse": 764.5010085070761,
+        "train_r2": 0.0064475096533839205,
+        "test_r2": -0.004352109617144162
+      },
+      "decision_tree": {
+        "model_name": "Decision Tree",
+        "train_rmse": 630.2463523601385,
+        "test_rmse": 912.3581789447809,
+        "train_r2": 0.3245008287354745,
+        "test_r2": -0.43041023904694686
+      },
+      "random_forest": {
+        "model_name": "Random Forest",
+        "train_rmse": 613.6808520411661,
+        "test_rmse": 769.7887950320315,
+        "train_r2": 0.35954402104227434,
+        "test_r2": -0.01829366355957518
+      },
+      "gradient_boosting": {
+        "model_name": "Gradient Boosting",
+        "train_rmse": 609.4242969052975,
+        "test_rmse": 792.5707633857879,
+        "train_r2": 0.3683977494693208,
+        "test_r2": -0.0794585401485508
+      },
+      "xgboost": {
+        "model_name": "XGBoost",
+        "train_rmse": 617.0957983587001,
+        "test_rmse": 789.94631328383,
+        "train_r2": 0.35239630537083577,
+        "test_r2": -0.07232152537120973
+      }
+    }
+  },
+  "premium": {
+    "best_model_name": "linear",
+    "best_model_metrics": {
+      "model_name": "Linear Regression",
+      "train_rmse": 319.45349840622987,
+      "test_rmse": 324.4011280120271,
+      "train_r2": 0.002348508381912917,
+      "test_r2": -0.002335062973678692
+    },
+    "all_models": {
+      "linear": {
+        "model_name": "Linear Regression",
+        "train_rmse": 319.45349840622987,
+        "test_rmse": 324.4011280120271,
+        "train_r2": 0.002348508381912917,
+        "test_r2": -0.002335062973678692
+      },
+      "decision_tree": {
+        "model_name": "Decision Tree",
+        "train_rmse": 281.2665335133808,
+        "test_rmse": 360.4652377100521,
+        "train_r2": 0.2266079907837817,
+        "test_r2": -0.2375848641525211
+      },
+      "random_forest": {
+        "model_name": "Random Forest",
+        "train_rmse": 277.5477455974371,
+        "test_rmse": 327.3349435592916,
+        "train_r2": 0.24692372231567516,
+        "test_r2": -0.020546858922599887
+      },
+      "gradient_boosting": {
+        "model_name": "Gradient Boosting",
+        "train_rmse": 283.90953817400475,
+        "test_rmse": 329.183885955415,
+        "train_r2": 0.21200488421480235,
+        "test_r2": -0.0321084812583361
+      },
+      "xgboost": {
+        "model_name": "XGBoost",
+        "train_rmse": 291.23373730623473,
+        "test_rmse": 329.55828655721706,
+        "train_r2": 0.17082361295964332,
+        "test_r2": -0.03445757429416196
+      }
+    }
+  },
+  "claim_probability": {
+    "best_model_name": "decision_tree",
+    "best_model_metrics": {
+      "model_name": "Decision Tree",
+      "train_accuracy": 0.6958333333333333,
+      "test_accuracy": 0.6283333333333333,
+      "test_precision": 0.41739130434782606,
+      "test_recall": 0.07384615384615385,
+      "test_f1": 0.12549019607843137
+    },
+    "all_models": {
+      "logistic": {
+        "model_name": "Logistic Regression",
+        "train_accuracy": 0.6591666666666667,
+        "test_accuracy": 0.6388888888888888,
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1": 0.0
+      },
+      "decision_tree": {
+        "model_name": "Decision Tree",
+        "train_accuracy": 0.6958333333333333,
+        "test_accuracy": 0.6283333333333333,
+        "test_precision": 0.41739130434782606,
+        "test_recall": 0.07384615384615385,
+        "test_f1": 0.12549019607843137
+      },
+      "random_forest": {
+        "model_name": "Random Forest",
+        "train_accuracy": 0.6917857142857143,
+        "test_accuracy": 0.6358333333333334,
+        "test_precision": 0.3225806451612903,
+        "test_recall": 0.007692307692307693,
+        "test_f1": 0.015026296018031555
+      },
+      "gradient_boosting": {
+        "model_name": "Gradient Boosting",
+        "train_accuracy": 0.6973809523809524,
+        "test_accuracy": 0.6283333333333333,
+        "test_precision": 0.32075471698113206,
+        "test_recall": 0.026153846153846153,
+        "test_f1": 0.04836415362731152
+      },
+      "xgboost": {
+        "model_name": "XGBoost",
+        "train_accuracy": 0.6922619047619047,
+        "test_accuracy": 0.6269444444444444,
+        "test_precision": 0.3130434782608696,
+        "test_recall": 0.027692307692307693,
+        "test_f1": 0.05088339222614841
+      }
+    }
+  },
+  "interpretability": {
+    "severity": {
+      "top_features": [
+        {
+          "feature": "PostalCode <= 2003.00",
+          "shap_importance": 0,
+          "lime_importance": 75206.84835166263,
+          "combined_importance": 75206.84835166263
+        },
+        {
+          "feature": "PostalCode > 6001.00",
+          "shap_importance": 0,
+          "lime_importance": 72425.18046537905,
+          "combined_importance": 72425.18046537905
+        },
+        {
+          "feature": "PostalCodePrefix_200 <= 0.00",
+          "shap_importance": 0,
+          "lime_importance": 62185.104843966226,
+          "combined_importance": 62185.104843966226
+        },
+        {
+          "feature": "0.00 < PostalCodePrefix_200 <= 1.00",
+          "shap_importance": 0,
+          "lime_importance": 61989.22427196026,
+          "combined_importance": 61989.22427196026
+        },
+        {
+          "feature": "PostalCodePrefix_700 <= 0.00",
+          "shap_importance": 0,
+          "lime_importance": 49377.43295724588,
+          "combined_importance": 49377.43295724588
+        },
+        {
+          "feature": "PostalCodePrefix_700 > 0.00",
+          "shap_importance": 0,
+          "lime_importance": 47498.66058517683,
+          "combined_importance": 47498.66058517683
+        },
+        {
+          "feature": "PostalCode",
+          "shap_importance": 34631.420954283494,
+          "lime_importance": 0,
+          "combined_importance": 34631.420954283494
+        },
+        {
+          "feature": "4002.00 < PostalCode <= 6001.00",
+          "shap_importance": 0,
+          "lime_importance": 30467.57038133623,
+          "combined_importance": 30467.57038133623
+        },
+        {
+          "feature": "PostalCodePrefix_600 <= 0.00",
+          "shap_importance": 0,
+          "lime_importance": 27283.396638453047,
+          "combined_importance": 27283.396638453047
+        },
+        {
+          "feature": "PostalCodePrefix_200",
+          "shap_importance": 25870.82935349249,
+          "lime_importance": 0,
+          "combined_importance": 25870.82935349249
+        }
+      ]
+    },
+    "premium": {
+      "top_features": [
+        {
+          "feature": "PostalCode <= 2003.00",
+          "shap_importance": 0,
+          "lime_importance": 5265.450805652556,
+          "combined_importance": 5265.450805652556
+        },
+        {
+          "feature": "PostalCodePrefix_200 <= 0.00",
+          "shap_importance": 0,
+          "lime_importance": 4333.403968336279,
+          "combined_importance": 4333.403968336279
+        },
+        {
+          "feature": "0.00 < PostalCodePrefix_200 <= 1.00",
+          "shap_importance": 0,
+          "lime_importance": 4270.178772132387,
+          "combined_importance": 4270.178772132387
+        },
+        {
+          "feature": "PostalCodePrefix_700 <= 0.00",
+          "shap_importance": 0,
+          "lime_importance": 3444.569600225902,
+          "combined_importance": 3444.569600225902
+        },
+        {
+          "feature": "PostalCode",
+          "shap_importance": 2259.601758449009,
+          "lime_importance": 0,
+          "combined_importance": 2259.601758449009
+        },
+        {
+          "feature": "5001.00 < PostalCode <= 6001.00",
+          "shap_importance": 0,
+          "lime_importance": 2164.9165470973176,
+          "combined_importance": 2164.9165470973176
+        },
+        {
+          "feature": "PostalCodePrefix_200",
+          "shap_importance": 1943.8549950718664,
+          "lime_importance": 0,
+          "combined_importance": 1943.8549950718664
+        },
+        {
+          "feature": "PostalCodePrefix_600 <= 0.00",
+          "shap_importance": 0,
+          "lime_importance": 1851.1980075013714,
+          "combined_importance": 1851.1980075013714
+        },
+        {
+          "feature": "PostalCodePrefix_400 > 0.00",
+          "shap_importance": 0,
+          "lime_importance": 1263.0150334227787,
+          "combined_importance": 1263.0150334227787
+        },
+        {
+          "feature": "PostalCodePrefix_400 <= 0.00",
+          "shap_importance": 0,
+          "lime_importance": 1213.6036056467547,
+          "combined_importance": 1213.6036056467547
+        }
+      ]
+    },
+    "claim_probability": {
+      "top_features": []
+    }
+  }
+}

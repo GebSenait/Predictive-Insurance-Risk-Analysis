@@ -6,6 +6,7 @@ selected, *why*, and *what it means* for pricing decisions.
 """
 
 import json
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -31,6 +32,18 @@ BUSINESS_IMPACT_TEMPLATES: Dict[str, str] = {
         "underwriting decisions."
     ),
 }
+
+
+def get_git_commit_hash() -> str:
+    """Return the current HEAD commit hash for traceability."""
+    try:
+        return (
+            subprocess.check_output(["git", "rev-parse", "HEAD"])
+            .decode("utf-8")
+            .strip()
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return "unknown"
 
 
 def build_decision_summary(
@@ -66,6 +79,7 @@ def build_decision_summary(
         "metric_name": metric_name,
         "metric_score": round(metric_score, 6),
         "timestamp": datetime.now(timezone.utc).isoformat(),
+        "git_commit": get_git_commit_hash(),
         "business_impact": business_impact,
     }
     if all_model_rankings:
